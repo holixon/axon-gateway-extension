@@ -8,11 +8,12 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
 
-  <artifactId>axon-gateway-springboot-autoconfigure</artifactId>
+  <artifactId>axon-gateway-spring-boot-autoconfigure</artifactId>
   <packaging>jar</packaging>
 
   <properties>
     <jacoco.skip>false</jacoco.skip>
+    <dokka.skip>false</dokka.skip>
   </properties>
 
   <dependencies>

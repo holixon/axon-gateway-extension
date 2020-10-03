@@ -13,8 +13,8 @@
 
   <modules>
     <module>extension</module>
-    <module>extension-springboot-autoconfigure</module>
-    <module>extension-springboot-starter</module>
+    <module>extension-spring-boot-autoconfigure</module>
+    <module>extension-spring-boot-starter</module>
   </modules>
 
   <properties>
@@ -52,13 +52,13 @@
 
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>axon-gateway-springboot-autoconfigure</artifactId>
+        <artifactId>axon-gateway-spring-boot-autoconfigure</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>axon-gateway-springboot-starter</artifactId>
+        <artifactId>axon-gateway-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
 
