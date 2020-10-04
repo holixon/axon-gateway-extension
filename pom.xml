@@ -108,21 +108,6 @@
       </dependency>
 
       <dependency>
-        <groupId>io.github.microutils</groupId>
-        <artifactId>kotlin-logging-jvm</artifactId>
-        <version>${kotlin-logging.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-common</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
         <groupId>io.mockk</groupId>
         <artifactId>mockk</artifactId>
         <version>${mockk.version}</version>
@@ -300,6 +285,12 @@
               <duplicateBehavior>skip</duplicateBehavior>
             </archiverConfig>
           </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <version>${springboot.version}</version>
         </plugin>
 
         <!-- Release -->

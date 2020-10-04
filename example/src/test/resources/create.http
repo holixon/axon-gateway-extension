@@ -1,0 +1,15 @@
+PUT http://localhost:8079/approval-request
+Content-Type: application/json
+
+{
+  "subject": "Advanced CQRS/ES Training",
+  "amount": "712.12",
+  "currency": "EUR"
+}
+> {%
+  client.test("Request executed successfully", function() {
+    client.assert(response.status === 201, "Response status is not 201");
+  });
+%}
+
+###
