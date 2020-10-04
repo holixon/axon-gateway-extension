@@ -1,6 +1,7 @@
 # Axon Framework - Gateways Extension
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.holixon/axon-gateway-extension/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.axonframework.extensions.kotlin/axon-kotlin)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/6a2c7585fd5742fbbf288c96023a9af8)](https://www.codacy.com/gh/holixon/axon-gateway-extension/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=holixon/axon-gateway-extension&amp;utm_campaign=Badge_Grade)
 
 _Note:_ This extension is still in an experimental stage.
 
