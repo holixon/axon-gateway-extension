@@ -10,6 +10,26 @@ Content-Type: application/json
   client.test("Request executed successfully", function() {
     client.assert(response.status === 201, "Response status is not 201");
   });
+
+  client.global.set("requestId", response.headers.valueOf("Location").substr(response.headers.valueOf("Location").lastIndexOf("/") + 1))
 %}
 
 ###
+
+GET http://localhost:8079/approval-request/{{requestId}}?revision=7
+
+###
+
+POST http://localhost:8079/approval-request/{{requestId}}
+Content-Type: application/json
+
+{
+  "subject": "Advanced CQRS/ES Training",
+  "amount": "912.12",
+  "currency": "EUR"
+}
+> {%
+  client.test("Request executed successfully", function() {
+    client.assert(response.status === 204, "Response status is not 204");
+  });
+%}

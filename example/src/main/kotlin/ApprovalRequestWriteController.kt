@@ -59,7 +59,9 @@ class ApprovalRequestWriteController(
         .fromCurrentServletMapping()
         .path("/{id}")
         .buildAndExpand(requestId)
-        .toUri()).build()
+        .toUri())
+        .header("X-Revision", counter.get().toString())
+        .build()
   }
 
   @ApiOperation(
@@ -86,7 +88,9 @@ class ApprovalRequestWriteController(
           logger.info("Sending update command for $requestId with revision $it")
         }).toMetaData())
     ).join()
-    return noContent().build()
+    return noContent()
+        .header("X-Revision", counter.get().toString())
+        .build()
   }
 }
 

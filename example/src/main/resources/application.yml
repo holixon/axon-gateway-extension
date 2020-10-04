@@ -16,4 +16,10 @@ swagger:
       path: "/approval-request/**"
   api-info:
     title: Axon Gateway Example API
-    description: REST endpoint for demostrations
+    description: Example REST endpoints.
+
+axon:
+  gateway:
+    version: '@axon.version@'
+  framework:
+    version: '@project.version@'
