@@ -2,6 +2,9 @@ package io.holixon.axon.gateway.example
 
 import org.axonframework.serialization.Revision
 
+/**
+ * Created.
+ */
 @Revision("1")
 data class ApprovalRequestCreatedEvent(
     val requestId: String,
@@ -10,6 +13,9 @@ data class ApprovalRequestCreatedEvent(
     val currency: String
 )
 
+/**
+ * Updated.
+ */
 @Revision("1")
 data class ApprovalRequestUpdatedEvent(
     val requestId: String,

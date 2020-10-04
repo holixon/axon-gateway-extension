@@ -2,6 +2,9 @@ package io.holixon.axon.gateway.example
 
 import org.axonframework.modelling.command.TargetAggregateIdentifier
 
+/**
+ * Create approval request.
+ */
 data class CreateApprovalRequestCommand(
     @TargetAggregateIdentifier
     val requestId: String,
@@ -10,6 +13,9 @@ data class CreateApprovalRequestCommand(
     val currency: String
 )
 
+/**
+ * Update approval request.
+ */
 data class UpdateApprovalRequestCommand(
     @TargetAggregateIdentifier
     val requestId: String,

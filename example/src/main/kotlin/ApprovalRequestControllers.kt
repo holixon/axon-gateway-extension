@@ -22,6 +22,9 @@ import javax.validation.Valid
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 
+/**
+ * Command controller.
+ */
 @Api(tags = ["Command"])
 @RestController
 @RequestMapping("/approval-request")
@@ -36,6 +39,10 @@ class ApprovalRequestWriteController(
 
   private val counter = AtomicLong(1)
 
+  /**
+   * Creates a new approval request.
+   * @param value approval request.
+   */
   @ApiOperation(value = "Creates a new approval")
   @PutMapping
   fun create(@ApiParam("Approval request")
@@ -64,6 +71,11 @@ class ApprovalRequestWriteController(
         .build()
   }
 
+  /**
+   * Updates existing approval request.
+   * @param requestId id of the request.
+   * @param value new version of request.
+   */
   @ApiOperation(
       value = "Updates exiting approval request."
   )
@@ -94,12 +106,20 @@ class ApprovalRequestWriteController(
   }
 }
 
+/**
+ * Query side controller.
+ */
 @Api(tags = ["Query"])
 @RestController
 @RequestMapping("/approval-request")
 class ApprovalRequestReadController(
     private val queryGateway: QueryGateway
 ) {
+  /**
+   * Retrieves approval request by id.
+   * @param requestId id of approval request.
+   * @param revision minimal revision.
+   */
   @ApiOperation(
       value = "Gets approval request."
   )
