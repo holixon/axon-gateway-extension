@@ -5,13 +5,12 @@
 
 _Note:_ This extension is still in an experimental stage.
 
-
 ## Getting started
 
 ### Dependencies for the extension
 
 **Maven**
-```
+```xml
 <dependency>
     <groupId>io.holixon</groupId>
     <artifactId>axon-gateway-extension</artifactId>
@@ -20,14 +19,14 @@ _Note:_ This extension is still in an experimental stage.
 ```
 
 **Gradle**
-```
+```groovy
 implementation("io.holixon:axon-gateway-extension:0.0.2")
 ```
 
 ### Dependencies for the Spring Boot Starter
 
 **Maven**
-```
+```xml
 <dependency>
     <groupId>io.holixon</groupId>
     <artifactId>axon-gateway-springboot-starter</artifactId>
@@ -36,7 +35,7 @@ implementation("io.holixon:axon-gateway-extension:0.0.2")
 ```
 
 **Gradle**
-```
+```groovy
 implementation("io.holixon:axon-gateway-springboot-starter:0.0.2")
 ```
 
@@ -86,7 +85,7 @@ If you have any questions how to use the extension, please have a look on exampl
 
 If you want to build the extension locally, you need to check it out from GiHub and run the following command:
 
-```
+```shell script
 ./mvnw clean install
 ``` 
 
@@ -95,7 +94,6 @@ If you want to build the extension locally, you need to check it out from GiHub 
 The project includes an example module demonstrating usage of the extension. If you want to skip the example
 build, please run the following command line:
 
-```
+```shell script
 ./mvnw clean install -DskipExamples
 ```
-
