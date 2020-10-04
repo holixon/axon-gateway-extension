@@ -6,10 +6,9 @@
   <parent>
     <groupId>io.holixon</groupId>
     <artifactId>axon-gateway-extension-parent</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
   </parent>
 
-  <groupId>io.holixon.example</groupId>
   <artifactId>axon-gateway-example</artifactId>
   <name>${project.artifactId}</name>
   <packaging>jar</packaging>
@@ -23,9 +22,44 @@
   </properties>
 
   <dependencies>
+
+    <!-- project -->
+    <dependency>
+      <groupId>io.holixon</groupId>
+      <artifactId>axon-gateway-spring-boot-starter</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.axonframework</groupId>
+      <artifactId>axon-spring-boot-starter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.axonframework</groupId>
+      <artifactId>axon-spring-boot-starter</artifactId>
+      <exclusions>
+        <exclusion>
+          <!-- we play locally and don't need axon server -->
+          <groupId>org.axonframework</groupId>
+          <artifactId>axon-server-connector</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.module</groupId>
+      <artifactId>jackson-module-kotlin</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.toolisticon.springboot</groupId>
+      <artifactId>springboot-swagger-starter</artifactId>
+      <version>0.3.0</version>
     </dependency>
   </dependencies>
 

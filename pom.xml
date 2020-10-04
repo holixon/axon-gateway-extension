@@ -8,7 +8,7 @@
 
   <groupId>io.holixon</groupId>
   <artifactId>axon-gateway-extension-parent</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.2</version>
   <packaging>pom</packaging>
 
   <modules>
@@ -107,21 +107,6 @@
         <version>${axon.version}</version>
       </dependency>
 
-      <dependency>
-        <groupId>io.github.microutils</groupId>
-        <artifactId>kotlin-logging-jvm</artifactId>
-        <version>${kotlin-logging.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-common</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
       <dependency>
         <groupId>io.mockk</groupId>
         <artifactId>mockk</artifactId>
@@ -300,6 +285,12 @@
               <duplicateBehavior>skip</duplicateBehavior>
             </archiverConfig>
           </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <version>${springboot.version}</version>
         </plugin>
 
         <!-- Release -->

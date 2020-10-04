@@ -1,0 +1,19 @@
+server:
+  port: 8079
+
+axon-gateway:
+  query:
+    type: revision-aware
+    revision-aware:
+      default-query-timeout: 10
+
+swagger:
+  enabled: true
+  redirect: true
+  dockets:
+    approval-request:
+      basePackage: "io.holixon.axon.gateway.example"
+      path: "/approval-request/**"
+  api-info:
+    title: Axon Gateway Example API
+    description: REST endpoint for demostrations

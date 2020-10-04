@@ -20,5 +20,9 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
+      - name: Setup Git
+        run: |-
+          git config --global user.email "info@holisticon.de"
+          git config --global user.name "Holixon Release CI"
       - name: Create a release
         run: mvn -B gitflow:release-start -DreleaseVersion=${GIT_TAG_NAME}
