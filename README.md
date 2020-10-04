@@ -41,7 +41,7 @@ implementation("io.holixon:axon-gateway-springboot-starter:0.0.2")
 
 ## Usage
 
-### Revision-Aware Gateway
+### Revision-Aware Query Gateway
 
 Imagine, you are sending a command and you want to query for the result of its effect in the projection.
 A Revision-Aware Gateway is capable of retrieving for a certain (minimal) revision of the projection. In 
