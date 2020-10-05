@@ -116,7 +116,7 @@ class RevisionAwareQueryGateway(
         .filter { it is Revisionable }
         .map { it to (it as Revisionable).revisionValue } // construct pairs from payload to revision value
   }
-  
+
   override fun registerDispatchInterceptor(interceptor: MessageDispatchInterceptor<in QueryMessage<*, *>?>): Registration {
     dispatchInterceptors.add(interceptor)
     return Registration { dispatchInterceptors.remove(interceptor) }
