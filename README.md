@@ -14,13 +14,13 @@ _Note:_ This extension is still in an experimental stage.
 <dependency>
     <groupId>io.holixon</groupId>
     <artifactId>axon-gateway-extension</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.4</version>
 </dependency>
 ```
 
 **Gradle**
 ```groovy
-implementation("io.holixon:axon-gateway-extension:0.0.2")
+implementation("io.holixon:axon-gateway-extension:0.0.4")
 ```
 
 ### Dependencies for the Spring Boot Starter
@@ -30,13 +30,13 @@ implementation("io.holixon:axon-gateway-extension:0.0.2")
 <dependency>
     <groupId>io.holixon</groupId>
     <artifactId>axon-gateway-springboot-starter</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.4</version>
 </dependency>
 ```
 
 **Gradle**
 ```groovy
-implementation("io.holixon:axon-gateway-springboot-starter:0.0.2")
+implementation("io.holixon:axon-gateway-springboot-starter:0.0.4")
 ```
 
 ## Usage
