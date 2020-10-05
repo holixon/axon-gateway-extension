@@ -6,7 +6,6 @@ import org.axonframework.messaging.IllegalPayloadAccessException
 import org.axonframework.messaging.Message
 import org.axonframework.messaging.MessageDispatchInterceptor
 import org.axonframework.messaging.responsetypes.ResponseType
-import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.queryhandling.*
 import org.slf4j.LoggerFactory
 import reactor.util.concurrent.Queues
@@ -18,7 +17,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * The revision  gateway taking care of a revision of the projection requested by the query and will deliver
- * results matching at leas this revision.
+ * results matching at least this revision.
  * @param queryBus bus to use.
  * @param defaultTimeout default timeout to use if not specified in the query.
  */
@@ -45,7 +44,7 @@ class RevisionAwareQueryGateway(
       super.query(queryName, query, responseType)
     } else {
       val result = CompletableFuture<R>()
-      logger.debug ( "REVISION-QUERY-GATEWAY-002: Revision-aware query $queryName detected, revision: $revisionQueryParameter" )
+      logger.debug("REVISION-QUERY-GATEWAY-002: Revision-aware query $queryName detected, revision: $revisionQueryParameter")
 
       val queryTimeout = revisionQueryParameter.getTimeoutOrDefault(defaultTimeout)
 
@@ -53,8 +52,8 @@ class RevisionAwareQueryGateway(
       val subscriptionQueryMessage: SubscriptionQueryMessage<Q, R, R> = GenericSubscriptionQueryMessage(
           queryMessage,
           queryName,
-          ResponseTypes.instanceOf(responseType.expectedResponseType) as ResponseType<R>,
-          ResponseTypes.instanceOf(responseType.expectedResponseType) as ResponseType<R>
+          responseType, // use the same response type as in original query for initial result and updates
+          responseType
       )
 
       val queryResult: SubscriptionQueryResult<QueryResponseMessage<R>, SubscriptionQueryUpdateMessage<R>> = queryBus
@@ -64,26 +63,44 @@ class RevisionAwareQueryGateway(
               Queues.SMALL_BUFFER_SIZE
           )
 
-      queryResult
-          .initialResult()
-          .filter { initialResult: QueryResponseMessage<R> -> Objects.nonNull(initialResult.payload) }
-          .map { obj: QueryResponseMessage<R> -> obj.payload }
-          .onErrorMap { e: Throwable -> if (e is IllegalPayloadAccessException) e.cause else e }
-          .concatWith(queryResult
-              .updates()
-              .filter { update: SubscriptionQueryUpdateMessage<R> -> Objects.nonNull(update.payload) }
-              .map { obj: SubscriptionQueryUpdateMessage<R> -> obj.payload }
-              .onErrorMap { e: Throwable -> if (e is IllegalPayloadAccessException) e.cause else e }
-          )
+      val queryResultPayloadWithMetadata = if (responseType is QueryResponseMessageResponseType<*>) {
+        // taking message metadata into account
+        queryResult
+            .initialResult()
+            .filter { initialResult: QueryResponseMessage<R> -> Objects.nonNull(initialResult.payload) }
+            .map { obj: QueryResponseMessage<R> -> obj.payload to RevisionValue.fromMetaData(obj.metaData) }
+            .onErrorMap { e: Throwable -> if (e is IllegalPayloadAccessException) e.cause else e }
+            .concatWith(queryResult
+                .updates()
+                .filter { update: SubscriptionQueryUpdateMessage<R> -> Objects.nonNull(update.payload) }
+                .map { obj: SubscriptionQueryUpdateMessage<R> -> obj.payload to RevisionValue.fromMetaData(obj.metaData) }
+                .onErrorMap { e: Throwable -> if (e is IllegalPayloadAccessException) e.cause else e }
+            )
+      } else {
+        // trying to read from payload
+        queryResult
+            .initialResult()
+            .filter { initialResult: QueryResponseMessage<R> -> Objects.nonNull(initialResult.payload) }
+            .map { obj: QueryResponseMessage<R> -> obj.payload }
+            .onErrorMap { e: Throwable -> if (e is IllegalPayloadAccessException) e.cause else e }
+            .concatWith(queryResult
+                .updates()
+                .filter { update: SubscriptionQueryUpdateMessage<R> -> Objects.nonNull(update.payload) }
+                .map { obj: SubscriptionQueryUpdateMessage<R> -> obj.payload }
+                .onErrorMap { e: Throwable -> if (e is IllegalPayloadAccessException) e.cause else e }
+            )
+            .filter { it is Revisionable }
+            .map { it to (it as Revisionable).revisionValue } // construct pairs from payload to revision value
+      }
+
+      queryResultPayloadWithMetadata
           .map {
-            logger.debug ( "REVISION-QUERY-GATEWAY-003: Response received:\n $it" )
+            logger.debug("REVISION-QUERY-GATEWAY-003: Response received:\n $it")
             it
           }
-          .filter { it is Revisionable }
-          .map { it to (it as Revisionable).revisionValue }
           .filter { pair -> pair.second.revision >= revisionQueryParameter.minimalRevision }
           .map { pair ->
-            logger.debug ( "REVISION-QUERY-GATEWAY-004: Responded $queryName having $revisionQueryParameter with revision ${pair.second}" )
+            logger.debug("REVISION-QUERY-GATEWAY-004: Responded $queryName having $revisionQueryParameter with revision ${pair.second}")
             pair.first
           }
           .timeout(

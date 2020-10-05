@@ -1,10 +1,12 @@
 package io.holixon.axon.gateway.example
 
+import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holixon.axon.gateway.query.RevisionValue
 import io.holixon.axon.gateway.query.Revisionable
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.messaging.MetaData
 import org.axonframework.queryhandling.QueryHandler
+import org.axonframework.queryhandling.QueryResponseMessage
 import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -29,12 +31,23 @@ class ApprovalRequestProjection(
   /**
    * Query handler.
    * @param query a query to retrieve an approval request by id.
-   * @return result containing the result.
+   * @return wrapper result containing the approval request.
    */
   @QueryHandler
-  fun getOne(query: ApprovalRequestQuery): ApprovalRequestQueryResult {
+  fun getOneInResult(query: ApprovalRequestQuery): ApprovalRequestQueryResult {
     require(storage.containsKey(query.requestId)) { "Approval request with id ${query.requestId} not found." }
     return ApprovalRequestQueryResult(payload = storage.getValue(query.requestId), revisionValue = revisions.getValue(query.requestId))
+  }
+
+  /**
+   * Query handler.
+   * @param query a query to retrieve an approval request by id.
+   * @return approval request.
+   */
+  @QueryHandler
+  fun getOne(query: ApprovalRequestQuery): QueryResponseMessage<ApprovalRequest> {
+    require(storage.containsKey(query.requestId)) { "Approval request with id ${query.requestId} not found." }
+    return QueryResponseMessageResponseType.asQueryResponseMessage(storage.getValue(query.requestId), revisions.getValue(query.requestId).toMetaData())
   }
 
   /**
@@ -45,6 +58,7 @@ class ApprovalRequestProjection(
   @EventHandler
   fun on(evt: ApprovalRequestCreatedEvent, meta: MetaData) {
     // overwrite with version from events
+    logger.info("Received ${evt.requestId}")
     revisions[evt.requestId] = RevisionValue.fromMetaData(meta)
     this.storage[evt.requestId] = ApprovalRequest(
         requestId = evt.requestId,
@@ -96,16 +110,29 @@ class ApprovalRequestProjection(
    * @param requestId id of the request to send the update about.
    */
   private fun updateSubscriptions(requestId: String) {
+
+    // update queries for QueryResponseMessageResponseType
     queryUpdateEmitter.emit(
         ApprovalRequestQuery::class.java,
         { query -> query.requestId == requestId },
-        ApprovalRequestQueryResult(payload = storage.getValue(requestId), revisionValue = revisions.getValue((requestId)))
+          QueryResponseMessageResponseType.asSubscriptionUpdateMessage(payload = storage.getValue(requestId), metaData = revisions.getValue(requestId).toMetaData())
+    )
+
+    // update queries for InstanceResponseType
+    queryUpdateEmitter.emit(
+        ApprovalRequestQuery::class.java,
+        { query -> query.requestId == requestId },
+        ApprovalRequestQueryResult(payload = storage.getValue(requestId), revisionValue = revisions.getValue(requestId))
     )
   }
 }
 
 /**
  * View model of the approval request.
+ * @param requestId unique request id.
+ * @param subject approval subject
+ * @param amount amount to approve.
+ * @param currency currency.
  */
 data class ApprovalRequest(
     val requestId: String,
@@ -116,6 +143,7 @@ data class ApprovalRequest(
 
 /**
  * Query for approval request by id.
+ * @param requestId request id to query for.
  */
 data class ApprovalRequestQuery(
     val requestId: String
@@ -123,6 +151,8 @@ data class ApprovalRequestQuery(
 
 /**
  * Query result.
+ * @param payload actual data entry.
+ * @param revision of the projection.
  */
 data class ApprovalRequestQueryResult(
     val payload: ApprovalRequest,

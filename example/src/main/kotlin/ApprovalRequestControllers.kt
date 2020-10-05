@@ -1,5 +1,6 @@
 package io.holixon.axon.gateway.example
 
+import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holixon.axon.gateway.query.RevisionQueryParameters
 import io.holixon.axon.gateway.query.RevisionValue
 import io.swagger.annotations.Api
@@ -89,7 +90,7 @@ class ApprovalRequestWriteController(
       value: ApprovalRequestDto): ResponseEntity<Void> {
     commandGateway.send<Void>(
         GenericCommandMessage.asCommandMessage<UpdateApprovalRequestCommand>(
-            CreateApprovalRequestCommand(
+            UpdateApprovalRequestCommand(
                 requestId = requestId,
                 subject = value.subject,
                 currency = value.currency,
@@ -124,6 +125,39 @@ class ApprovalRequestReadController(
   )
   @GetMapping("/{id}")
   fun getApprovalRequest(
+      @PathVariable("id") requestId: String,
+      @RequestParam("revision", defaultValue = "1") revision: Long = 1L): ResponseEntity<ApprovalRequestDto> {
+
+    return queryGateway
+        .query(
+            GenericCommandMessage
+                .asCommandMessage<ApprovalRequestQuery>(ApprovalRequestQuery(requestId.trim()))
+                .withMetaData(RevisionQueryParameters(revision).toMetaData()),
+            QueryResponseMessageResponseType.queryResponseMessageResponseType<ApprovalRequest>()
+        )
+        .thenApply { result ->
+          ok(
+              ApprovalRequestDto(
+                  subject = result.subject,
+                  amount = result.amount,
+                  currency = result.currency
+              )
+          )
+        }
+        .exceptionally { notFound().build() }
+        .join()
+  }
+
+  /**
+   * Retrieves approval request by id.
+   * @param requestId id of approval request.
+   * @param revision minimal revision.
+   */
+  @ApiOperation(
+      value = "Gets approval request."
+  )
+  @GetMapping("/embedded/{id}")
+  fun getApprovalRequestEmbedded(
       @PathVariable("id") requestId: String,
       @RequestParam("revision", defaultValue = "1") revision: Long = 1L): ResponseEntity<ApprovalRequestDto> {
 

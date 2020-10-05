@@ -61,7 +61,8 @@ commandGateway.send<Void>(
 )
 ```
 
-Now you can query for a certain revision by:
+Now you can query for a certain revision by, if the result contains the revision information inside of the payload 
+(the query result implements `Revisionable`).
 
 ```kotlin
 queryGateway.query(
@@ -71,13 +72,26 @@ queryGateway.query(
         ResponseTypes.instanceOf(ApprovalRequestQueryResult::class.java)
     ).join()
 ```
-The gateway will detect the revision metadata in the query and wait until the specified response
+
+As alternative, you can query for a certain revision by if the query method returns `QueryResponseMessage<T>` and carries
+meta data inside of the message `metadata` field..
+
+```kotlin
+queryGateway.query(
+        GenericCommandMessage
+            .asCommandMessage<ApprovalRequestQuery>(ApprovalRequestQuery(requestId.trim()))
+            .withMetaData(RevisionQueryParameters(revision).toMetaData()),
+        QueryResponseMessageType.queryResponseMessageType<ApprovalRequest>()
+    ).join()
+```
+
+The query gateway will detect the revision metadata in the query and wait until the specified response
 with specified revision has arrived in the projection. In order not to wait forever, you can either
 pass the timeout with the query or setup default timeout using the application properties.
 
 In order to maintain revisions in your projection, make sure your event get the revision information from
 the command and the projection stores it. Currently, the revision must be transported inside the query result,
-by implementing the `Revisionable` interface.
+by implementing the `Revisionable` interface or by returning `QueryResponseMessage<T>` from your handler method.
 
 If you have any questions how to use the extension, please have a look on example project.   
 

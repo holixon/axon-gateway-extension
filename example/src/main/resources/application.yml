@@ -5,7 +5,7 @@ axon-gateway:
   query:
     type: revision-aware
     revision-aware:
-      default-query-timeout: 10
+      default-query-timeout: 10_000
 
 swagger:
   enabled: true
