@@ -47,8 +47,6 @@ class RevisionAwareQueryGateway(
       logger.debug("REVISION-QUERY-GATEWAY-002: Revision-aware query $queryName detected, revision: $revisionQueryParameter")
 
       val queryTimeout = revisionQueryParameter.getTimeoutOrDefault(defaultTimeout)
-
-      @Suppress("UNCHECKED_CAST")
       val subscriptionQueryMessage: SubscriptionQueryMessage<Q, R, R> = GenericSubscriptionQueryMessage(
           queryMessage,
           queryName,
@@ -56,44 +54,15 @@ class RevisionAwareQueryGateway(
           responseType
       )
 
-      val queryResult: SubscriptionQueryResult<QueryResponseMessage<R>, SubscriptionQueryUpdateMessage<R>> = queryBus
-          .subscriptionQuery(
-              processInterceptors(subscriptionQueryMessage),
-              SubscriptionQueryBackpressure.defaultBackpressure(),
-              Queues.SMALL_BUFFER_SIZE
-          )
-
-      val queryResultPayloadWithMetadata = if (responseType is QueryResponseMessageResponseType<*>) {
-        // taking message metadata into account
-        queryResult
-            .initialResult()
-            .filter { initialResult: QueryResponseMessage<R> -> Objects.nonNull(initialResult.payload) }
-            .map { obj: QueryResponseMessage<R> -> obj.payload to RevisionValue.fromMetaData(obj.metaData) }
-            .onErrorMap { e: Throwable -> if (e is IllegalPayloadAccessException) e.cause else e }
-            .concatWith(queryResult
-                .updates()
-                .filter { update: SubscriptionQueryUpdateMessage<R> -> Objects.nonNull(update.payload) }
-                .map { obj: SubscriptionQueryUpdateMessage<R> -> obj.payload to RevisionValue.fromMetaData(obj.metaData) }
-                .onErrorMap { e: Throwable -> if (e is IllegalPayloadAccessException) e.cause else e }
-            )
-      } else {
-        // trying to read from payload
-        queryResult
-            .initialResult()
-            .filter { initialResult: QueryResponseMessage<R> -> Objects.nonNull(initialResult.payload) }
-            .map { obj: QueryResponseMessage<R> -> obj.payload }
-            .onErrorMap { e: Throwable -> if (e is IllegalPayloadAccessException) e.cause else e }
-            .concatWith(queryResult
-                .updates()
-                .filter { update: SubscriptionQueryUpdateMessage<R> -> Objects.nonNull(update.payload) }
-                .map { obj: SubscriptionQueryUpdateMessage<R> -> obj.payload }
-                .onErrorMap { e: Throwable -> if (e is IllegalPayloadAccessException) e.cause else e }
-            )
-            .filter { it is Revisionable }
-            .map { it to (it as Revisionable).revisionValue } // construct pairs from payload to revision value
-      }
-
-      queryResultPayloadWithMetadata
+      queryResultPayloadWithMetadata(
+          queryResult = queryBus
+              .subscriptionQuery(
+                  processInterceptors(subscriptionQueryMessage),
+                  SubscriptionQueryBackpressure.defaultBackpressure(),
+                  Queues.SMALL_BUFFER_SIZE
+              ),
+          responseType = responseType
+      )
           .map {
             logger.debug("REVISION-QUERY-GATEWAY-003: Response received:\n $it")
             it
@@ -115,6 +84,39 @@ class RevisionAwareQueryGateway(
     }
   }
 
+  private fun <R : Any> queryResultPayloadWithMetadata(
+      queryResult: SubscriptionQueryResult<QueryResponseMessage<R>, SubscriptionQueryUpdateMessage<R>>,
+      responseType: ResponseType<R>
+  ) = if (responseType is QueryResponseMessageResponseType<*>) {
+    // taking message metadata into account
+    queryResult
+        .initialResult()
+        .filter { initialResult: QueryResponseMessage<R> -> Objects.nonNull(initialResult.payload) }
+        .map { obj: QueryResponseMessage<R> -> obj.payload to RevisionValue.fromMetaData(obj.metaData) }
+        .onErrorMap { e: Throwable -> if (e is IllegalPayloadAccessException) e.cause else e }
+        .concatWith(queryResult
+            .updates()
+            .filter { update: SubscriptionQueryUpdateMessage<R> -> Objects.nonNull(update.payload) }
+            .map { obj: SubscriptionQueryUpdateMessage<R> -> obj.payload to RevisionValue.fromMetaData(obj.metaData) }
+            .onErrorMap { e: Throwable -> if (e is IllegalPayloadAccessException) e.cause else e }
+        )
+  } else {
+    // trying to read from payload
+    queryResult
+        .initialResult()
+        .filter { initialResult: QueryResponseMessage<R> -> Objects.nonNull(initialResult.payload) }
+        .map { obj: QueryResponseMessage<R> -> obj.payload }
+        .onErrorMap { e: Throwable -> if (e is IllegalPayloadAccessException) e.cause else e }
+        .concatWith(queryResult
+            .updates()
+            .filter { update: SubscriptionQueryUpdateMessage<R> -> Objects.nonNull(update.payload) }
+            .map { obj: SubscriptionQueryUpdateMessage<R> -> obj.payload }
+            .onErrorMap { e: Throwable -> if (e is IllegalPayloadAccessException) e.cause else e }
+        )
+        .filter { it is Revisionable }
+        .map { it to (it as Revisionable).revisionValue } // construct pairs from payload to revision value
+  }
+  
   override fun registerDispatchInterceptor(interceptor: MessageDispatchInterceptor<in QueryMessage<*, *>?>): Registration {
     dispatchInterceptors.add(interceptor)
     return Registration { dispatchInterceptors.remove(interceptor) }
