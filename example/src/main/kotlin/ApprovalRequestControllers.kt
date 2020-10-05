@@ -20,7 +20,6 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicLong
 import javax.validation.Valid
 import javax.validation.constraints.NotEmpty
-import javax.validation.constraints.NotNull
 
 /**
  * Command controller.
@@ -128,20 +127,24 @@ class ApprovalRequestReadController(
       @PathVariable("id") requestId: String,
       @RequestParam("revision", defaultValue = "1") revision: Long = 1L): ResponseEntity<ApprovalRequestDto> {
 
-    val result: ApprovalRequestQueryResult = queryGateway.query(
-        GenericCommandMessage
-            .asCommandMessage<ApprovalRequestQuery>(ApprovalRequestQuery(requestId.trim()))
-            .withMetaData(RevisionQueryParameters(revision).toMetaData()),
-        ResponseTypes.instanceOf(ApprovalRequestQueryResult::class.java)
-    ).join()
-
-    return ok(
-        ApprovalRequestDto(
-            subject = result.payload.subject,
-            amount = result.payload.amount,
-            currency = result.payload.currency
+    return queryGateway
+        .query(
+            GenericCommandMessage
+                .asCommandMessage<ApprovalRequestQuery>(ApprovalRequestQuery(requestId.trim()))
+                .withMetaData(RevisionQueryParameters(revision).toMetaData()),
+            ResponseTypes.instanceOf(ApprovalRequestQueryResult::class.java)
         )
-    )
+        .thenApply { result ->
+          ok(
+              ApprovalRequestDto(
+                  subject = result.payload.subject,
+                  amount = result.payload.amount,
+                  currency = result.payload.currency
+              )
+          )
+        }
+        .exceptionally { notFound().build() }
+        .join()
   }
 
 }

@@ -8,7 +8,6 @@ import org.axonframework.messaging.MessageDispatchInterceptor
 import org.axonframework.messaging.responsetypes.ResponseType
 import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.queryhandling.*
-import org.reactivestreams.Publisher
 import org.slf4j.LoggerFactory
 import reactor.util.concurrent.Queues
 import java.time.Duration
@@ -90,12 +89,10 @@ class RevisionAwareQueryGateway(
           .timeout(
               Duration.of(queryTimeout, ChronoUnit.SECONDS)
           )
-          .onErrorResume { exception ->
-            Publisher {
-              result.completeExceptionally(exception)
-            }
-          }
-          .subscribe { projectionResult -> result.complete(projectionResult) }
+          .subscribe(
+              { projectionResult -> result.complete(projectionResult) },
+              { exception -> result.completeExceptionally(exception) }
+          )
 
       result
     }
