@@ -22,6 +22,7 @@ data class RevisionQueryParameters(
         /**
          * Reads revision parameters from metadata (of the query)
          */
+        @JvmStatic
         fun fromMetaData(metaData: MetaData): RevisionQueryParameters {
             val revision = if (metaData.containsKey(REVISION_KEY) && metaData[REVISION_KEY] is Long) {
                 metaData[REVISION_KEY] as Long

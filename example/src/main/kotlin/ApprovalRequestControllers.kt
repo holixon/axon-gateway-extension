@@ -20,8 +20,10 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicLong
 import javax.validation.Valid
 import javax.validation.constraints.NotEmpty
-import javax.validation.constraints.NotNull
 
+/**
+ * Command controller.
+ */
 @Api(tags = ["Command"])
 @RestController
 @RequestMapping("/approval-request")
@@ -36,6 +38,10 @@ class ApprovalRequestWriteController(
 
   private val counter = AtomicLong(1)
 
+  /**
+   * Creates a new approval request.
+   * @param value approval request.
+   */
   @ApiOperation(value = "Creates a new approval")
   @PutMapping
   fun create(@ApiParam("Approval request")
@@ -59,9 +65,16 @@ class ApprovalRequestWriteController(
         .fromCurrentServletMapping()
         .path("/{id}")
         .buildAndExpand(requestId)
-        .toUri()).build()
+        .toUri())
+        .header("X-Revision", counter.get().toString())
+        .build()
   }
 
+  /**
+   * Updates existing approval request.
+   * @param requestId id of the request.
+   * @param value new version of request.
+   */
   @ApiOperation(
       value = "Updates exiting approval request."
   )
@@ -86,16 +99,26 @@ class ApprovalRequestWriteController(
           logger.info("Sending update command for $requestId with revision $it")
         }).toMetaData())
     ).join()
-    return noContent().build()
+    return noContent()
+        .header("X-Revision", counter.get().toString())
+        .build()
   }
 }
 
+/**
+ * Query side controller.
+ */
 @Api(tags = ["Query"])
 @RestController
 @RequestMapping("/approval-request")
 class ApprovalRequestReadController(
     private val queryGateway: QueryGateway
 ) {
+  /**
+   * Retrieves approval request by id.
+   * @param requestId id of approval request.
+   * @param revision minimal revision.
+   */
   @ApiOperation(
       value = "Gets approval request."
   )
@@ -104,20 +127,24 @@ class ApprovalRequestReadController(
       @PathVariable("id") requestId: String,
       @RequestParam("revision", defaultValue = "1") revision: Long = 1L): ResponseEntity<ApprovalRequestDto> {
 
-    val result: ApprovalRequestQueryResult = queryGateway.query(
-        GenericCommandMessage
-            .asCommandMessage<ApprovalRequestQuery>(ApprovalRequestQuery(requestId.trim()))
-            .withMetaData(RevisionQueryParameters(revision).toMetaData()),
-        ResponseTypes.instanceOf(ApprovalRequestQueryResult::class.java)
-    ).join()
-
-    return ok(
-        ApprovalRequestDto(
-            subject = result.payload.subject,
-            amount = result.payload.amount,
-            currency = result.payload.currency
+    return queryGateway
+        .query(
+            GenericCommandMessage
+                .asCommandMessage<ApprovalRequestQuery>(ApprovalRequestQuery(requestId.trim()))
+                .withMetaData(RevisionQueryParameters(revision).toMetaData()),
+            ResponseTypes.instanceOf(ApprovalRequestQueryResult::class.java)
         )
-    )
+        .thenApply { result ->
+          ok(
+              ApprovalRequestDto(
+                  subject = result.payload.subject,
+                  amount = result.payload.amount,
+                  currency = result.payload.currency
+              )
+          )
+        }
+        .exceptionally { notFound().build() }
+        .join()
   }
 
 }

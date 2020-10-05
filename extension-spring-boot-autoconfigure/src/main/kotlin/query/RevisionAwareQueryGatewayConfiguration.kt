@@ -22,6 +22,9 @@ class RevisionAwareQueryGatewayConfiguration {
     private val logger = LoggerFactory.getLogger(RevisionAwareQueryGatewayConfiguration::class.java)
   }
 
+  /**
+   * Factory function creating a revision-aware query gateway.
+   */
   @Bean
   fun revisionAwareGateway(queryBus: QueryBus, properties: RevisionAwareQueryGatewayProperties): QueryGateway {
     logger.info("REVISION-QUERY-GATEWAY-001: Using revision-aware query gateway.")
