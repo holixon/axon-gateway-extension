@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holixon</groupId>
     <artifactId>axon-gateway-extension-parent</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
   </parent>
 
   <artifactId>axon-gateway-example</artifactId>
@@ -36,10 +36,6 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.axonframework</groupId>
-      <artifactId>axon-spring-boot-starter</artifactId>
     </dependency>
     <dependency>
       <groupId>org.axonframework</groupId>
