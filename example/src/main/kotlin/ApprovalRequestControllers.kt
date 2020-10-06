@@ -1,5 +1,6 @@
 package io.holixon.axon.gateway.example
 
+import io.holixon.axon.gateway.command.QueryResultAwareCommandGateway
 import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holixon.axon.gateway.query.RevisionQueryParameters
 import io.holixon.axon.gateway.query.RevisionValue
@@ -10,6 +11,7 @@ import io.swagger.annotations.ApiParam
 import org.axonframework.commandhandling.GenericCommandMessage
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.messaging.responsetypes.ResponseTypes
+import org.axonframework.queryhandling.GenericQueryMessage
 import org.axonframework.queryhandling.QueryGateway
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -29,7 +31,8 @@ import javax.validation.constraints.NotEmpty
 @RestController
 @RequestMapping("/approval-request")
 class ApprovalRequestWriteController(
-    private val commandGateway: CommandGateway
+    private val commandGateway: CommandGateway,
+    private val queryResultAwareCommandGateway: QueryResultAwareCommandGateway
 ) {
 
   companion object {
@@ -38,6 +41,37 @@ class ApprovalRequestWriteController(
   }
 
   private val counter = AtomicLong(1)
+
+  /**
+   * Creates a new approval request.
+   * @param value approval request.
+   */
+
+  @ApiOperation(value = "Creates a new approval and wait until it is received.")
+  @PutMapping("/create-and-wait")
+  fun createAndWait(@ApiParam("Approval request")
+                    @RequestBody
+                    @Valid
+                    value: ApprovalRequestDto): ResponseEntity<ApprovalRequest> {
+    val requestId = UUID.randomUUID().toString()
+    return queryResultAwareCommandGateway
+        .storeAndWaitForQueryResult(
+            commandMessage = GenericCommandMessage.asCommandMessage<CreateApprovalRequestCommand>(
+                CreateApprovalRequestCommand(
+                    requestId = requestId,
+                    subject = value.subject,
+                    currency = value.currency,
+                    amount = value.amount
+                )
+            ),
+            queryMessage = GenericQueryMessage(ApprovalRequestQuery(requestId), QueryResponseMessageResponseType.queryResponseMessageResponseType<ApprovalRequest>())
+        ).thenApply { request ->
+          ok(request)
+        }.exceptionally { exception ->
+          logger.error("Error retrivieng the projection", exception)
+          notFound().build() }
+        .join()
+  }
 
   /**
    * Creates a new approval request.

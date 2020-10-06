@@ -46,7 +46,10 @@ class ApprovalRequestProjection(
    */
   @QueryHandler
   fun getOne(query: ApprovalRequestQuery): QueryResponseMessage<ApprovalRequest> {
-    require(storage.containsKey(query.requestId)) { "Approval request with id ${query.requestId} not found." }
+    if (!storage.containsKey(query.requestId)) {
+      logger.trace("Approval request with id ${query.requestId} not found.")
+      return QueryResponseMessageResponseType.asQueryResponseMessage(null)
+    }
     return QueryResponseMessageResponseType.asQueryResponseMessage(storage.getValue(query.requestId), revisions.getValue(query.requestId).toMetaData())
   }
 

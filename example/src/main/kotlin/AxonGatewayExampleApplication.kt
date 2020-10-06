@@ -1,5 +1,6 @@
 package io.holixon.axon.gateway.example
 
+import io.holixon.axon.gateway.configuration.command.QueryResultAwareCommandGatewayConfiguration
 import io.holixon.axon.gateway.configuration.query.EnableRevisionAwareQueryGateway
 import io.holixon.axon.gateway.query.RevisionValue
 import org.axonframework.commandhandling.CommandMessage
@@ -13,6 +14,7 @@ import org.axonframework.messaging.correlation.SimpleCorrelationDataProvider
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Import
 
 /**
  * Starting point of the application.
@@ -26,6 +28,7 @@ fun main(args: Array<String>) {
  */
 @EnableRevisionAwareQueryGateway
 @SpringBootApplication
+@Import(QueryResultAwareCommandGatewayConfiguration::class)
 class AxonGatewayExampleApplication {
 
   /**
