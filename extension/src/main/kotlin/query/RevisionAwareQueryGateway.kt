@@ -63,15 +63,13 @@ class RevisionAwareQueryGateway(
               ),
           responseType = responseType
       )
-          .map {
-            logger.debug("REVISION-QUERY-GATEWAY-003: Response received:\n $it")
-            it
-          }
+          .doOnNext { logger.debug("REVISION-QUERY-GATEWAY-003: Response received:\n $it") }
           .filter { pair -> pair.second.revision >= revisionQueryParameter.minimalRevision }
           .map { pair ->
             logger.debug("REVISION-QUERY-GATEWAY-004: Responded $queryName having $revisionQueryParameter with revision ${pair.second}")
             pair.first
           }
+          .take(1)
           .timeout(
               Duration.of(queryTimeout, ChronoUnit.SECONDS)
           )
@@ -100,6 +98,7 @@ class RevisionAwareQueryGateway(
             .map { obj: SubscriptionQueryUpdateMessage<R> -> obj.payload to RevisionValue.fromMetaData(obj.metaData) }
             .onErrorMap { e: Throwable -> if (e is IllegalPayloadAccessException) e.cause else e }
         )
+        .doFinally { queryResult.cancel() }
   } else {
     // trying to read from payload
     queryResult
@@ -115,6 +114,7 @@ class RevisionAwareQueryGateway(
         )
         .filter { it is Revisionable }
         .map { it to (it as Revisionable).revisionValue } // construct pairs from payload to revision value
+        .doFinally { queryResult.cancel() }
   }
 
   override fun registerDispatchInterceptor(interceptor: MessageDispatchInterceptor<in QueryMessage<*, *>?>): Registration {
