@@ -58,7 +58,6 @@ class RevisionAwareQueryGateway(
           queryResult = queryBus
               .subscriptionQuery(
                   processInterceptors(subscriptionQueryMessage),
-                  SubscriptionQueryBackpressure.defaultBackpressure(),
                   Queues.SMALL_BUFFER_SIZE
               ),
           responseType = responseType

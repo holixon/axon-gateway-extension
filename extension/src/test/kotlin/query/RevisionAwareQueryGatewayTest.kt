@@ -25,13 +25,12 @@ internal class RevisionAwareQueryGatewayTest {
   private object TestQuery
 
   @Test
-  fun `cancels subscription query after result is received`() {
+  fun `wait on subscription query until the result is received and cancels then`() {
     val subscriptionQueryUpdatePublisher = TestPublisher.create<SubscriptionQueryUpdateMessage<String>>()
     val registration = mockk<Registration>()
     every {
       queryBus.subscriptionQuery(
         any<SubscriptionQueryMessage<TestQuery, String, String>>(),
-        any(),
         any()
       )
     } returns DefaultSubscriptionQueryResult<QueryResponseMessage<String>, SubscriptionQueryUpdateMessage<String>>(
@@ -49,9 +48,14 @@ internal class RevisionAwareQueryGatewayTest {
     assertFalse(result.isDone, "Result future should not be done yet.")
     subscriptionQueryUpdatePublisher.next(updateMessage("foo4", 4))
     assertTrue(result.isDone, "Result future should be done now.")
+    // correct message is delivered
     assertEquals("foo4", result.join())
+    // subscription is cancelled
     subscriptionQueryUpdatePublisher.assertCancelled()
     verify { registration.cancel() }
+    // last message is not delivered anymore
+    subscriptionQueryUpdatePublisher.next(updateMessage("foo5", 5))
+    assertEquals("foo4", result.join())
   }
 
   private fun updateMessage(payload: String, revision: Long) = GenericSubscriptionQueryUpdateMessage(payload).withMetaData(RevisionValue(revision).toMetaData())
