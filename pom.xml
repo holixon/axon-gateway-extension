@@ -8,7 +8,7 @@
 
   <groupId>io.holixon</groupId>
   <artifactId>axon-gateway-extension-parent</artifactId>
-  <version>0.0.4</version>
+  <version>0.0.5</version>
   <packaging>pom</packaging>
 
   <modules>
@@ -18,22 +18,22 @@
   </modules>
 
   <properties>
-    <axon.version>4.4.3</axon.version>
+    <axon.version>4.5.3</axon.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <kotlin.version>1.4.10</kotlin.version>
+    <kotlin.version>1.5.21</kotlin.version>
     <kotlin-logging.version>2.0.3</kotlin-logging.version>
 
     <java.version>11</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
 
-    <mockk.version>1.10.2</mockk.version>
+    <mockk.version>1.12.0</mockk.version>
     <junit.jupiter.version>5.7.0</junit.jupiter.version>
     <slf4j.version>1.7.30</slf4j.version>
     <log4j.version>2.13.3</log4j.version>
-    <dokka.version>1.4.10</dokka.version>
+    <dokka.version>1.5.0</dokka.version>
 
-    <springboot.version>2.3.4.RELEASE</springboot.version>
+    <springboot.version>2.4.5</springboot.version>
 
     <!-- Skip KDoc generation by default -->
     <dokka.skip>true</dokka.skip>
@@ -141,6 +141,11 @@
     <dependency>
       <groupId>io.mockk</groupId>
       <artifactId>mockk</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.projectreactor</groupId>
+      <artifactId>reactor-test</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -444,7 +449,7 @@
         <plugin>
           <groupId>com.amashchenko.maven.plugin</groupId>
           <artifactId>gitflow-maven-plugin</artifactId>
-          <version>1.14.0</version>
+          <version>1.16.0</version>
           <configuration>
             <gitFlowConfig>
               <productionBranch>master</productionBranch>
