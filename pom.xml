@@ -33,7 +33,7 @@
     <log4j.version>2.13.3</log4j.version>
     <dokka.version>1.6.10</dokka.version>
 
-    <springboot.version>2.6.4</springboot.version>
+    <springboot.version>2.6.6</springboot.version>
 
     <!-- Skip KDoc generation by default -->
     <dokka.skip>true</dokka.skip>
