@@ -23,3 +23,7 @@ axon:
     version: '@axon.version@'
   framework:
     version: '@project.version@'
+  serializer:
+    messages: jackson
+    general: jackson
+    events: jackson
