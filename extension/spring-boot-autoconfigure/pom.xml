@@ -6,6 +6,7 @@
     <groupId>io.holixon</groupId>
     <artifactId>axon-gateway-extension-parent</artifactId>
     <version>0.0.6-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>
   </parent>
 
   <artifactId>axon-gateway-spring-boot-autoconfigure</artifactId>
@@ -21,6 +22,11 @@
       <groupId>io.holixon</groupId>
       <artifactId>axon-gateway-extension</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.holixon</groupId>
+      <artifactId>axon-gateway-jackson-module</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>

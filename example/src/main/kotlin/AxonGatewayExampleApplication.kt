@@ -1,6 +1,9 @@
 package io.holixon.axon.gateway.example
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.holixon.axon.gateway.configuration.query.EnableRevisionAwareQueryGateway
+import io.holixon.axon.gateway.jackson.module.AxonGatewayJacksonModule
 import io.holixon.axon.gateway.query.RevisionValue
 import org.axonframework.commandhandling.CommandMessage
 import org.axonframework.eventhandling.tokenstore.inmemory.InMemoryTokenStore
@@ -13,6 +16,7 @@ import org.axonframework.messaging.correlation.SimpleCorrelationDataProvider
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Profile
 
 /**
  * Starting point of the application.
@@ -53,5 +57,10 @@ class AxonGatewayExampleApplication {
         )
     )
   }
+
+  @Bean
+  @Profile("jackson")
+  fun objectMapper(): ObjectMapper = jacksonObjectMapper()
+    .registerModule(AxonGatewayJacksonModule())
 
 }

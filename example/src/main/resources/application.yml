@@ -7,23 +7,8 @@ axon-gateway:
     revision-aware:
       default-query-timeout: 10_000
 
-swagger:
-  enabled: true
-  redirect: true
-  dockets:
-    approval-request:
-      basePackage: "io.holixon.axon.gateway.example"
-      path: "/approval-request/**"
-  api-info:
-    title: Axon Gateway Example API
-    description: Example REST endpoints.
-
 axon:
   gateway:
     version: '@axon.version@'
   framework:
     version: '@project.version@'
-  serializer:
-    messages: jackson
-    general: jackson
-    events: jackson

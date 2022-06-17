@@ -6,6 +6,7 @@
     <groupId>io.holixon</groupId>
     <artifactId>axon-gateway-extension-parent</artifactId>
     <version>0.0.6-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>
   </parent>
 
   <artifactId>axon-gateway-spring-boot-starter</artifactId>

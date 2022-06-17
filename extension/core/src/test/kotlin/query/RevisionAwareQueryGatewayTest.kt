@@ -2,9 +2,6 @@ package io.holixon.axon.gateway.query
 
 
 import io.holixon.axon.gateway.query.QueryResponseMessageResponseType.Companion.queryResponseMessageResponseType
-import io.holixon.axon.gateway.query.RevisionAwareQueryGateway
-import io.holixon.axon.gateway.query.RevisionQueryParameters
-import io.holixon.axon.gateway.query.RevisionValue
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

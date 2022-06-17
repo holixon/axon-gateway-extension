@@ -3,12 +3,11 @@ package io.holixon.axon.gateway.example
 import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holixon.axon.gateway.query.RevisionQueryParameters
 import io.holixon.axon.gateway.query.RevisionValue
+import mu.KLogging
 import org.axonframework.commandhandling.GenericCommandMessage
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.queryhandling.QueryGateway
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.*
 import org.springframework.web.bind.annotation.*
@@ -27,10 +26,7 @@ class ApprovalRequestWriteController(
   private val commandGateway: CommandGateway
 ) {
 
-  companion object {
-    @JvmStatic
-    val logger: Logger = LoggerFactory.getLogger(ApprovalRequestWriteController::class.java)
-  }
+  companion object : KLogging()
 
   private val counter = AtomicLong(1)
 
