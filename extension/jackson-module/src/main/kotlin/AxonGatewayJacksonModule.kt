@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.KClass
 
 /**
@@ -33,7 +34,22 @@ class KClassSerializer : StdSerializer<KClass<*>>(KClass::class.java) {
  * De-serializes the KClass in reading the full classified class name from the payload JSON.
  */
 class KClassDeserializer : StdDeserializer<KClass<*>>(KClass::class.java) {
+
+  companion object {
+    /*
+     * Static cache for classes.
+     */
+    private val cache: ConcurrentHashMap<String, KClass<*>> = ConcurrentHashMap()
+
+    /**
+     * Clears static class cache.
+     */
+    fun clearCache() {
+      cache.clear()
+    }
+  }
+
   override fun deserialize(p: JsonParser, ctxt: DeserializationContext?): KClass<*> {
-    return Class.forName(p.text).kotlin
+    return cache.getOrPut(p.text) { Class.forName(p.text).kotlin }
   }
 }
