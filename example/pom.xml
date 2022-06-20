@@ -4,9 +4,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>io.holixon</groupId>
+    <groupId>io.holixon.axon.gateway</groupId>
     <artifactId>axon-gateway-extension-parent</artifactId>
-    <version>0.0.5</version>
+    <version>0.1.0</version>
   </parent>
 
   <artifactId>axon-gateway-example</artifactId>
@@ -25,8 +25,15 @@
 
     <!-- project -->
     <dependency>
-      <groupId>io.holixon</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>axon-gateway-spring-boot-starter</artifactId>
+    </dependency>
+
+
+    <dependency>
+      <groupId>io.github.microutils</groupId>
+      <artifactId>kotlin-logging-jvm</artifactId>
+      <version>${kotlin-logging.version}</version>
     </dependency>
 
     <dependency>
@@ -53,9 +60,19 @@
       <artifactId>jackson-module-kotlin</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.toolisticon.springboot</groupId>
-      <artifactId>springboot-swagger-starter</artifactId>
-      <version>0.3.0</version>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-ui</artifactId>
+      <version>1.6.9</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 

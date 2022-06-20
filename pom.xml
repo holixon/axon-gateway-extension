@@ -6,34 +6,35 @@
   <description>Extension for Axon Framework that provides additional gateways.</description>
   <url>https://github.com/holixon/axon-gateway-extension/</url>
 
-  <groupId>io.holixon</groupId>
+  <groupId>io.holixon.axon.gateway</groupId>
   <artifactId>axon-gateway-extension-parent</artifactId>
-  <version>0.0.5</version>
+  <version>0.1.0</version>
   <packaging>pom</packaging>
 
   <modules>
-    <module>extension</module>
-    <module>extension-spring-boot-autoconfigure</module>
-    <module>extension-spring-boot-starter</module>
+    <module>extension/core</module>
+    <module>extension/spring-boot-autoconfigure</module>
+    <module>extension/spring-boot-starter</module>
+    <module>extension/jackson-module</module>
   </modules>
 
   <properties>
-    <axon.version>4.5.3</axon.version>
+    <axon.version>4.5.10</axon.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <kotlin.version>1.5.21</kotlin.version>
-    <kotlin-logging.version>2.0.3</kotlin-logging.version>
+    <kotlin.version>1.6.21</kotlin.version>
+    <kotlin-logging.version>2.1.23</kotlin-logging.version>
 
     <java.version>11</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
 
-    <mockk.version>1.12.0</mockk.version>
+    <mockk.version>1.12.4</mockk.version>
     <junit.jupiter.version>5.7.0</junit.jupiter.version>
     <slf4j.version>1.7.30</slf4j.version>
     <log4j.version>2.13.3</log4j.version>
-    <dokka.version>1.5.0</dokka.version>
+    <dokka.version>1.6.21</dokka.version>
 
-    <springboot.version>2.4.5</springboot.version>
+    <springboot.version>2.7.0</springboot.version>
 
     <!-- Skip KDoc generation by default -->
     <dokka.skip>true</dokka.skip>
@@ -59,6 +60,12 @@
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>axon-gateway-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>axon-gateway-jackson-module</artifactId>
         <version>${project.version}</version>
       </dependency>
 
@@ -148,11 +155,6 @@
       <artifactId>reactor-test</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-simple</artifactId>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 
   <build>
@@ -164,13 +166,13 @@
         <!-- Clean -->
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
-          <version>3.1.0</version>
+          <version>3.2.0</version>
         </plugin>
 
         <!-- Java Compiler -->
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.1</version>
+          <version>3.10.1</version>
           <configuration>
             <encoding>${project.build.sourceEncoding}</encoding>
             <source>${maven.compiler.source}</source>
@@ -313,7 +315,7 @@
         <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
-          <version>0.8.6</version>
+          <version>0.8.8</version>
           <executions>
             <execution>
               <id>pre-unit-test</id>
@@ -396,7 +398,7 @@
         <!-- JAR -->
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.2.0</version>
+          <version>3.2.2</version>
           <configuration>
             <archive>
               <manifest>
@@ -423,7 +425,7 @@
         <plugin>
           <!-- just to make sure deployed artifacts are always built (and tested) using JDK 8+ -->
           <artifactId>maven-enforcer-plugin</artifactId>
-          <version>1.4.2.jenkins-1</version>
+          <version>3.1.0</version>
           <executions>
             <execution>
               <id>enforce-java</id>
@@ -449,7 +451,7 @@
         <plugin>
           <groupId>com.amashchenko.maven.plugin</groupId>
           <artifactId>gitflow-maven-plugin</artifactId>
-          <version>1.16.0</version>
+          <version>1.18.0</version>
           <configuration>
             <gitFlowConfig>
               <productionBranch>master</productionBranch>
@@ -471,7 +473,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-gpg-plugin</artifactId>
-          <version>1.6</version>
+          <version>3.0.1</version>
           <configuration>
             <gpgArguments>
               <arg>--batch</arg>
@@ -503,7 +505,7 @@
         <plugin>
           <groupId>org.sonatype.plugins</groupId>
           <artifactId>nexus-staging-maven-plugin</artifactId>
-          <version>1.6.8</version>
+          <version>1.6.13</version>
           <executions>
             <execution>
               <id>default-deploy</id>

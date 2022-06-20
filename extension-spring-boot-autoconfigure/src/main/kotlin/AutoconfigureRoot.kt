@@ -1,1 +1,0 @@
-package io.holixon.axon.gateway.configuration

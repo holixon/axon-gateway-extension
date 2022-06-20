@@ -1,6 +1,7 @@
 # Axon Framework - Gateways Extension
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.holixon/axon-gateway-extension/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.axonframework.extensions.kotlin/axon-kotlin)
+[![stable](https://img.shields.io/badge/lifecycle-STABLE-green.svg)](https://github.com/holisticon#open-source-lifecycle)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.holixon.axon.gateway/axon-gateway-extension/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.holixon.axon.gateway/axon-gateway-extension)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/6a2c7585fd5742fbbf288c96023a9af8)](https://www.codacy.com/gh/holixon/axon-gateway-extension/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=holixon/axon-gateway-extension&amp;utm_campaign=Badge_Grade)
 
 _Note:_ This extension is still in an experimental stage.
@@ -12,15 +13,10 @@ _Note:_ This extension is still in an experimental stage.
 **Maven**
 ```xml
 <dependency>
-    <groupId>io.holixon</groupId>
+    <groupId>io.holixon.axon.gateway</groupId>
     <artifactId>axon-gateway-extension</artifactId>
-    <version>0.0.4</version>
+    <version>0.1.0</version>
 </dependency>
-```
-
-**Gradle**
-```groovy
-implementation("io.holixon:axon-gateway-extension:0.0.4")
 ```
 
 ### Dependencies for the Spring Boot Starter
@@ -28,15 +24,10 @@ implementation("io.holixon:axon-gateway-extension:0.0.4")
 **Maven**
 ```xml
 <dependency>
-    <groupId>io.holixon</groupId>
+    <groupId>io.holixon.axon.gateway</groupId>
     <artifactId>axon-gateway-springboot-starter</artifactId>
-    <version>0.0.4</version>
+    <version>0.1.0</version>
 </dependency>
-```
-
-**Gradle**
-```groovy
-implementation("io.holixon:axon-gateway-springboot-starter:0.0.4")
 ```
 
 ## Usage
@@ -95,6 +86,29 @@ by implementing the `Revisionable` interface or by returning `QueryResponseMessa
 
 If you have any questions how to use the extension, please have a look on example project.   
 
+### Jackson for query serialization
+
+If you are using this extension with `Jackson` serialization, it is required that the query response type is 
+serializable by Jackson. For this purpose, we provide a small Jackson module which needs to be included and registered in your project.
+
+To do so, please add the following dependency to your classpath:
+
+**Maven**
+```xml
+<dependency>
+    <groupId>io.holixon.axon.gateway</groupId>
+    <artifactId>axon-gateway-jackson-module</artifactId>
+    <version>0.1.0</version>
+</dependency>
+```
+
+and register it in your Jackson ObjectMapper:
+
+```kotlin
+@Bean
+fun objectMapper(): ObjectMapper = jacksonObjectMapper()
+  .registerModule(AxonGatewayJacksonModule())
+```
 ## Building the extension
 
 If you want to build the extension locally, you need to check it out from GiHub and run the following command:
