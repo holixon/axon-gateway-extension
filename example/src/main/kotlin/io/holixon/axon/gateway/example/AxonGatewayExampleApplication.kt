@@ -12,8 +12,8 @@ import org.axonframework.messaging.correlation.CorrelationDataProvider
 import org.axonframework.messaging.correlation.MessageOriginProvider
 import org.axonframework.messaging.correlation.MultiCorrelationDataProvider
 import org.axonframework.messaging.correlation.SimpleCorrelationDataProvider
-import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Profile
 
@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Profile
  * Starting point of the application.
  */
 fun main(args: Array<String>) {
-  SpringApplication.run(AxonGatewayExampleApplication::class.java, *args)
+  runApplication<AxonGatewayExampleApplication>(*args)
 }
 
 /**
