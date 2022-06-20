@@ -10,6 +10,9 @@ import org.axonframework.queryhandling.QueryGateway
 import org.springframework.stereotype.Service
 import java.util.*
 
+/**
+ * Service for running an integration scenario.
+ */
 @Service
 class TestScenario(
   val commandGateway: CommandGateway,
@@ -19,6 +22,9 @@ class TestScenario(
     const val revision = 1L
   }
 
+  /**
+   * Creates the request.
+   */
   fun createRequest(): String {
     val requestId = UUID.randomUUID().toString()
     return commandGateway.send<String>(
@@ -37,6 +43,9 @@ class TestScenario(
     }
   }
 
+  /**
+   * Queries the request.
+   */
   fun queryForRequest(requestId: String): ApprovalRequest? {
     return queryGateway
       .query(

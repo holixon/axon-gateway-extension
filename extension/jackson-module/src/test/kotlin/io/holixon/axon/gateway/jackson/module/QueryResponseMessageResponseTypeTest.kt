@@ -38,4 +38,4 @@ internal class QueryResponseMessageResponseTypeTest {
 
 }
 
-data class Foo(val name: String)
+internal data class Foo(val name: String)

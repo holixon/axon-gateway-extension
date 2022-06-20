@@ -57,6 +57,9 @@ class AxonGatewayExampleApplication {
     )
   }
 
+  /**
+   * Provides an object mapper using the Jackson module.
+   */
   @Bean
   @Profile("jackson")
   fun objectMapper(): ObjectMapper = jacksonObjectMapper()

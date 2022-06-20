@@ -12,13 +12,13 @@ import kotlin.test.assertNotNull
 @ActiveProfiles("jackson")
 @DirtiesContext
 @Disabled // FIXME: #115
-class JacksonApplicationITest {
+internal class JacksonApplicationITest {
 
   @Autowired
   private lateinit var scenario: TestScenario
 
   @Test
-  fun runScenario() {
+  fun `should create and query for request using jackson`() {
     val requestId = scenario.createRequest()
     assertNotNull(scenario.queryForRequest(requestId), "Could not find request for id $requestId")
   }

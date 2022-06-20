@@ -16,7 +16,7 @@ internal class XstreamApplicationITest {
   private lateinit var scenario: TestScenario
 
   @Test
-  fun runScenario() {
+  fun `should create and query for request using XStream`() {
     val requestId = scenario.createRequest()
     assertNotNull(scenario.queryForRequest(requestId), "Could not find request for id $requestId")
   }
