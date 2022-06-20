@@ -2,7 +2,7 @@
 name: 'Bug report'
 about: 'Report a bug in Axon Framework - Gateway Extension'
 title:
-labels: 'type: bug :bug:'
+labels: 'Type: bug'
 assignees: 
 
 ---
