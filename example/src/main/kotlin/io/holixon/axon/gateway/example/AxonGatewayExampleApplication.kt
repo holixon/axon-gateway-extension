@@ -8,7 +8,6 @@ import io.holixon.axon.gateway.query.RevisionValue
 import org.axonframework.commandhandling.CommandMessage
 import org.axonframework.eventhandling.tokenstore.inmemory.InMemoryTokenStore
 import org.axonframework.eventsourcing.eventstore.inmemory.InMemoryEventStorageEngine
-import org.axonframework.messaging.Message
 import org.axonframework.messaging.correlation.CorrelationDataProvider
 import org.axonframework.messaging.correlation.MessageOriginProvider
 import org.axonframework.messaging.correlation.MultiCorrelationDataProvider
@@ -51,10 +50,10 @@ class AxonGatewayExampleApplication {
   @Bean
   fun revisionAwareCorrelationDataProvider(): CorrelationDataProvider {
     return MultiCorrelationDataProvider<CommandMessage<Any>>(
-        listOf(
-            MessageOriginProvider(),
-            SimpleCorrelationDataProvider(RevisionValue.REVISION_KEY)
-        )
+      listOf(
+        MessageOriginProvider(),
+        SimpleCorrelationDataProvider(RevisionValue.REVISION_KEY)
+      )
     )
   }
 

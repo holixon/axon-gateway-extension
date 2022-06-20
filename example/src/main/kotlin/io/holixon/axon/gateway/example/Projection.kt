@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component
  */
 @Component
 class ApprovalRequestProjection(
-    private val queryUpdateEmitter: QueryUpdateEmitter
+  private val queryUpdateEmitter: QueryUpdateEmitter
 ) {
 
   companion object {
@@ -61,10 +61,10 @@ class ApprovalRequestProjection(
     logger.info("Received ${evt.requestId}")
     revisions[evt.requestId] = RevisionValue.fromMetaData(meta)
     this.storage[evt.requestId] = ApprovalRequest(
-        requestId = evt.requestId,
-        subject = evt.subject,
-        amount = evt.amount,
-        currency = evt.currency
+      requestId = evt.requestId,
+      subject = evt.subject,
+      amount = evt.amount,
+      currency = evt.currency
     )
     updateSubscriptions(evt.requestId)
   }
@@ -78,10 +78,10 @@ class ApprovalRequestProjection(
   fun on(evt: ApprovalRequestUpdatedEvent, meta: MetaData) {
     if (checkAndUpdateRevision(evt.requestId, RevisionValue.fromMetaData(meta))) {
       this.storage[evt.requestId] = ApprovalRequest(
-          requestId = evt.requestId,
-          subject = evt.subject,
-          amount = evt.amount,
-          currency = evt.currency
+        requestId = evt.requestId,
+        subject = evt.subject,
+        amount = evt.amount,
+        currency = evt.currency
       )
       updateSubscriptions(evt.requestId)
     } else {
@@ -113,16 +113,16 @@ class ApprovalRequestProjection(
 
     // update queries for QueryResponseMessageResponseType
     queryUpdateEmitter.emit(
-        ApprovalRequestQuery::class.java,
-        { query -> query.requestId == requestId },
-          QueryResponseMessageResponseType.asSubscriptionUpdateMessage(payload = storage.getValue(requestId), metaData = revisions.getValue(requestId).toMetaData())
+      ApprovalRequestQuery::class.java,
+      { query -> query.requestId == requestId },
+      QueryResponseMessageResponseType.asSubscriptionUpdateMessage(payload = storage.getValue(requestId), metaData = revisions.getValue(requestId).toMetaData())
     )
 
     // update queries for InstanceResponseType
     queryUpdateEmitter.emit(
-        ApprovalRequestQuery::class.java,
-        { query -> query.requestId == requestId },
-        ApprovalRequestQueryResult(payload = storage.getValue(requestId), revisionValue = revisions.getValue(requestId))
+      ApprovalRequestQuery::class.java,
+      { query -> query.requestId == requestId },
+      ApprovalRequestQueryResult(payload = storage.getValue(requestId), revisionValue = revisions.getValue(requestId))
     )
   }
 }
@@ -135,10 +135,10 @@ class ApprovalRequestProjection(
  * @param currency currency.
  */
 data class ApprovalRequest(
-    val requestId: String,
-    val subject: String,
-    val amount: String,
-    val currency: String
+  val requestId: String,
+  val subject: String,
+  val amount: String,
+  val currency: String
 )
 
 /**
@@ -146,7 +146,7 @@ data class ApprovalRequest(
  * @param requestId request id to query for.
  */
 data class ApprovalRequestQuery(
-    val requestId: String
+  val requestId: String
 )
 
 /**
@@ -155,6 +155,6 @@ data class ApprovalRequestQuery(
  * @param revision of the projection.
  */
 data class ApprovalRequestQueryResult(
-    val payload: ApprovalRequest,
-    override val revisionValue: RevisionValue
+  val payload: ApprovalRequest,
+  override val revisionValue: RevisionValue
 ) : Revisionable

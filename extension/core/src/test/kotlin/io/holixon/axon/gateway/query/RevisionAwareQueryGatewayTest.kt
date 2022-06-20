@@ -1,6 +1,5 @@
 package io.holixon.axon.gateway.query
 
-
 import io.holixon.axon.gateway.query.QueryResponseMessageResponseType.Companion.queryResponseMessageResponseType
 import io.mockk.every
 import io.mockk.mockk
@@ -56,5 +55,7 @@ internal class RevisionAwareQueryGatewayTest {
     assertEquals("foo4", result.join())
   }
 
-  private fun updateMessage(payload: String, revision: Long) = GenericSubscriptionQueryUpdateMessage(payload).withMetaData(RevisionValue(revision).toMetaData())
+  private fun updateMessage(payload: String, revision: Long) = GenericSubscriptionQueryUpdateMessage(payload).withMetaData(
+    RevisionValue(revision).toMetaData()
+  )
 }

@@ -1,12 +1,6 @@
 package io.holixon.axon.gateway.configuration.query
 
 import io.holixon.axon.gateway.query.RevisionAwareQueryGateway
-import io.holixon.axon.gateway.query.RevisionValue
-import org.axonframework.commandhandling.CommandMessage
-import org.axonframework.messaging.correlation.CorrelationDataProvider
-import org.axonframework.messaging.correlation.MessageOriginProvider
-import org.axonframework.messaging.correlation.MultiCorrelationDataProvider
-import org.axonframework.messaging.correlation.SimpleCorrelationDataProvider
 import org.axonframework.queryhandling.QueryBus
 import org.axonframework.queryhandling.QueryGateway
 import org.slf4j.LoggerFactory
