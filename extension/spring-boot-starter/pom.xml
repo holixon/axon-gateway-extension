@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>io.holixon</groupId>
+    <groupId>io.holixon.axon.gateway</groupId>
     <artifactId>axon-gateway-extension-parent</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
@@ -14,7 +14,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>io.holixon</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>axon-gateway-spring-boot-autoconfigure</artifactId>
     </dependency>
   </dependencies>

@@ -6,7 +6,7 @@
   <description>Extension for Axon Framework that provides additional gateways.</description>
   <url>https://github.com/holixon/axon-gateway-extension/</url>
 
-  <groupId>io.holixon</groupId>
+  <groupId>io.holixon.axon.gateway</groupId>
   <artifactId>axon-gateway-extension-parent</artifactId>
   <version>0.1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
