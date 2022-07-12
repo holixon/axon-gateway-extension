@@ -19,6 +19,7 @@
     <maven.sources.skip>true</maven.sources.skip>
     <maven.install.skip>false</maven.install.skip>
     <gpg.skip>true</gpg.skip>
+    <springdoc-ui.version>1.6.9</springdoc-ui.version>
   </properties>
 
   <dependencies>
@@ -47,13 +48,6 @@
     <dependency>
       <groupId>org.axonframework</groupId>
       <artifactId>axon-spring-boot-starter</artifactId>
-      <exclusions>
-        <exclusion>
-          <!-- we play locally and don't need axon server -->
-          <groupId>org.axonframework</groupId>
-          <artifactId>axon-server-connector</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.module</groupId>
@@ -62,8 +56,9 @@
     <dependency>
       <groupId>org.springdoc</groupId>
       <artifactId>springdoc-openapi-ui</artifactId>
-      <version>1.6.9</version>
+      <version>${springdoc-ui.version}</version>
     </dependency>
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-test</artifactId>

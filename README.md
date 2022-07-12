@@ -125,3 +125,8 @@ build, please run the following command line:
 ```shell script
 ./mvnw clean install -DskipExamples
 ```
+
+To start example please run the `AxonGatewayExampleApplication`. By supplying the Spring profile `inmem` you can run it without the 
+Axon Server. If you run it with Axon Server, make use of `example/docker-compose.yml` to start one using Docker.
+
+To play with example, navigate to `http://localhost:8079/swagger-ui/index.html` with your browser and send some REST requests.

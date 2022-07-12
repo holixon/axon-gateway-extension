@@ -56,7 +56,7 @@ class ApprovalRequestWriteController(
     return created(
       ServletUriComponentsBuilder
         .fromCurrentServletMapping()
-        .path("/{id}")
+        .path("/approval-request/{id}")
         .buildAndExpand(requestId)
         .toUri()
     )
