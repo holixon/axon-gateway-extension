@@ -1,0 +1,4 @@
+axon-gateway:
+  query:
+    revision-aware:
+      default-query-timeout: 5_000

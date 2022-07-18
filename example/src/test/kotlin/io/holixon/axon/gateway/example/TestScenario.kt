@@ -20,8 +20,7 @@ internal class TestScenario(
     const val revision = 1L
   }
 
-  fun createRequest(): String {
-    val requestId = UUID.randomUUID().toString()
+  fun createRequest(requestId: String = UUID.randomUUID().toString()): String {
     return commandGateway.send<String>(
       GenericCommandMessage.asCommandMessage<CreateApprovalRequestCommand>(
         CreateApprovalRequestCommand(
@@ -45,7 +44,14 @@ internal class TestScenario(
           .asCommandMessage<ApprovalRequestQuery>(ApprovalRequestQuery(requestId.trim()))
           .withMetaData(RevisionQueryParameters(revision).toMetaData()),
         QueryResponseMessageResponseType.queryResponseMessageResponseType<ApprovalRequest>()
-      )
+      ).handle { result, throwable ->
+        if (throwable == null) {
+          result
+        } else {
+          logger.error(throwable) { "Error occured during query." }
+          null
+        }
+      }
       .join()
   }
 }
