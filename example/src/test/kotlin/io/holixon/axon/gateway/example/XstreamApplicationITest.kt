@@ -31,7 +31,7 @@ internal class XstreamApplicationITest {
     }.start()
 
     Awaitility.await("Could not find request for id $requestId").atMost(Duration.ofSeconds(13)).untilAsserted {
-      scenario.queryForRequest(requestId)
+      assertNotNull(scenario.queryForRequest(requestId))
     }
   }
 }
