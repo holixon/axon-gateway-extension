@@ -19,9 +19,9 @@
   </modules>
 
   <properties>
-    <axon.version>4.5.10</axon.version>
+    <axon.version>4.5.14</axon.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <kotlin.version>1.6.21</kotlin.version>
+    <kotlin.version>1.7.10</kotlin.version>
     <kotlin-logging.version>2.1.23</kotlin-logging.version>
 
     <java.version>11</java.version>
@@ -34,7 +34,7 @@
     <log4j.version>2.13.3</log4j.version>
     <dokka.version>1.6.21</dokka.version>
 
-    <springboot.version>2.7.0</springboot.version>
+    <springboot.version>2.7.1</springboot.version>
 
     <!-- Skip KDoc generation by default -->
     <dokka.skip>true</dokka.skip>

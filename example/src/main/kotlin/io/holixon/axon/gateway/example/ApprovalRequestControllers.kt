@@ -153,13 +153,17 @@ class ApprovalRequestReadController(
         ResponseTypes.instanceOf(ApprovalRequestQueryResult::class.java)
       )
       .thenApply { result ->
-        ok(
-          ApprovalRequestDto(
-            subject = result.payload.subject,
-            amount = result.payload.amount,
-            currency = result.payload.currency
+        if (result.payload != null) {
+          ok(
+            ApprovalRequestDto(
+              subject = result.payload.subject,
+              amount = result.payload.amount,
+              currency = result.payload.currency
+            )
           )
-        )
+        } else {
+          notFound().build()
+        }
       }
       .exceptionally { notFound().build() }
       .join()
