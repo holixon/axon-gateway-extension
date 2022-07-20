@@ -8,6 +8,7 @@ import org.axonframework.messaging.MessageDispatchInterceptor
 import org.axonframework.messaging.responsetypes.ResponseType
 import org.axonframework.queryhandling.*
 import org.slf4j.LoggerFactory
+import reactor.core.publisher.Flux
 import reactor.util.concurrent.Queues
 import java.time.Duration
 import java.time.temporal.ChronoUnit
@@ -23,8 +24,8 @@ import java.util.concurrent.CopyOnWriteArrayList
  */
 @Suppress("unused")
 class RevisionAwareQueryGateway(
-    private val queryBus: QueryBus,
-    private val defaultTimeout: Long
+  private val queryBus: QueryBus,
+  private val defaultTimeout: Long
 ) : DefaultQueryGateway(builder().queryBus(queryBus)) {
 
   companion object {
@@ -48,72 +49,86 @@ class RevisionAwareQueryGateway(
 
       val queryTimeout = revisionQueryParameter.getTimeoutOrDefault(defaultTimeout)
       val subscriptionQueryMessage: SubscriptionQueryMessage<Q, R, R> = GenericSubscriptionQueryMessage(
-          queryMessage,
-          queryName,
-          responseType, // use the same response type as in original query for initial result and updates
-          responseType
+        queryMessage,
+        queryName,
+        responseType, // use the same response type as in original query for initial result and updates
+        responseType
       )
 
       queryResultPayloadWithMetadata(
-          queryResult = queryBus
-              .subscriptionQuery(
-                  processInterceptors(subscriptionQueryMessage),
-                  Queues.SMALL_BUFFER_SIZE
-              ),
-          responseType = responseType
+        queryResult = queryBus
+          .subscriptionQuery(
+            processInterceptors(subscriptionQueryMessage),
+            Queues.SMALL_BUFFER_SIZE
+          ),
+        responseType = responseType
       )
-          .doOnNext { logger.debug("REVISION-QUERY-GATEWAY-003: Response received:\n $it") }
-          .filter { pair -> pair.second.revision >= revisionQueryParameter.minimalRevision }
-          .map { pair ->
-            logger.debug("REVISION-QUERY-GATEWAY-004: Responded $queryName having $revisionQueryParameter with revision ${pair.second}")
-            pair.first
-          }
-          .take(1)
-          .timeout(
-              Duration.of(queryTimeout, ChronoUnit.SECONDS)
-          )
-          .subscribe(
-              { projectionResult -> result.complete(projectionResult) },
-              { exception -> result.completeExceptionally(exception) }
-          )
+        .doOnNext { logger.debug("REVISION-QUERY-GATEWAY-003: Response received:\n $it") }
+        .filter { pair -> pair.second.revision >= revisionQueryParameter.minimalRevision }
+        .map { pair ->
+          logger.debug("REVISION-QUERY-GATEWAY-004: Responded $queryName having $revisionQueryParameter with revision ${pair.second}")
+          pair.first
+        }
+        .take(1)
+        .timeout(
+          Duration.of(queryTimeout, ChronoUnit.SECONDS)
+        )
+        .subscribe(
+          { projectionResult -> result.complete(projectionResult) },
+          { exception -> result.completeExceptionally(exception) }
+        )
 
       result
     }
   }
 
   private fun <R : Any> queryResultPayloadWithMetadata(
-      queryResult: SubscriptionQueryResult<QueryResponseMessage<R>, SubscriptionQueryUpdateMessage<R>>,
-      responseType: ResponseType<R>
+    queryResult: SubscriptionQueryResult<QueryResponseMessage<R>, SubscriptionQueryUpdateMessage<R>>,
+    responseType: ResponseType<R>
   ) = if (responseType is QueryResponseMessageResponseType<*>) {
     // taking message metadata into account
-    queryResult
+    // Use mergeSequential instead of concatWith so that the updates Flux is eagerly subscribed.
+    // This is due to a bug in Axon Framework where the subscription won't be removed from the QueryUpdateEmitter if the Flux has no subscribers at the time cancel() is called.
+    Flux.mergeSequential(
+      queryResult
         .initialResult()
+        // Usually, if the Mono returns an element right away, the take operator will cancel and the updates flux is never subscribed.
+        // By calling delayElement, we give it some time to subscribe to the flux before the Mono returns an element.
+        // It doesn't need much time, it is sufficient to make it emit on a different thread.
+        .delayElement(Duration.ofNanos(1))
         .filter { initialResult: QueryResponseMessage<R> -> Objects.nonNull(initialResult.payload) }
         .map { obj: QueryResponseMessage<R> -> obj.payload to RevisionValue.fromMetaData(obj.metaData) }
+        .onErrorMap { e: Throwable -> if (e is IllegalPayloadAccessException) e.cause else e },
+      queryResult
+        .updates()
+        .filter { update: SubscriptionQueryUpdateMessage<R> -> Objects.nonNull(update.payload) }
+        .map { obj: SubscriptionQueryUpdateMessage<R> -> obj.payload to RevisionValue.fromMetaData(obj.metaData) }
         .onErrorMap { e: Throwable -> if (e is IllegalPayloadAccessException) e.cause else e }
-        .concatWith(queryResult
-            .updates()
-            .filter { update: SubscriptionQueryUpdateMessage<R> -> Objects.nonNull(update.payload) }
-            .map { obj: SubscriptionQueryUpdateMessage<R> -> obj.payload to RevisionValue.fromMetaData(obj.metaData) }
-            .onErrorMap { e: Throwable -> if (e is IllegalPayloadAccessException) e.cause else e }
-        )
-        .doFinally { queryResult.cancel() }
+    )
+      .doFinally { queryResult.cancel() }
   } else {
     // trying to read from payload
-    queryResult
+    // Use mergeSequential instead of concatWith so that the updates Flux is eagerly subscribed.
+    // This is due to a bug in Axon Framework where the subscription won't be removed from the QueryUpdateEmitter if the Flux has no subscribers at the time cancel() is called.
+    Flux.mergeSequential(
+      queryResult
         .initialResult()
+        // Usually, if the Mono returns an element right away, the take operator will cancel and the updates flux is never subscribed.
+        // By calling delayElement, we give it some time to subscribe to the flux before the Mono returns an element.
+        // It doesn't need much time, it is sufficient to make it emit on a different thread.
+        .delayElement(Duration.ofNanos(1))
         .filter { initialResult: QueryResponseMessage<R> -> Objects.nonNull(initialResult.payload) }
         .map { obj: QueryResponseMessage<R> -> obj.payload }
+        .onErrorMap { e: Throwable -> if (e is IllegalPayloadAccessException) e.cause else e },
+      queryResult
+        .updates()
+        .filter { update: SubscriptionQueryUpdateMessage<R> -> Objects.nonNull(update.payload) }
+        .map { obj: SubscriptionQueryUpdateMessage<R> -> obj.payload }
         .onErrorMap { e: Throwable -> if (e is IllegalPayloadAccessException) e.cause else e }
-        .concatWith(queryResult
-            .updates()
-            .filter { update: SubscriptionQueryUpdateMessage<R> -> Objects.nonNull(update.payload) }
-            .map { obj: SubscriptionQueryUpdateMessage<R> -> obj.payload }
-            .onErrorMap { e: Throwable -> if (e is IllegalPayloadAccessException) e.cause else e }
-        )
-        .filter { it is Revisionable }
-        .map { it to (it as Revisionable).revisionValue } // construct pairs from payload to revision value
-        .doFinally { queryResult.cancel() }
+    )
+      .filter { it is Revisionable }
+      .map { it to (it as Revisionable).revisionValue } // construct pairs from payload to revision value
+      .doFinally { queryResult.cancel() }
   }
 
   override fun registerDispatchInterceptor(interceptor: MessageDispatchInterceptor<in QueryMessage<*, *>?>): Registration {
