@@ -35,8 +35,7 @@ class ApprovalRequestProjection(
    */
   @QueryHandler
   fun getOneInResult(query: ApprovalRequestQuery): ApprovalRequestQueryResult {
-    require(storage.containsKey(query.requestId)) { "Approval request with id ${query.requestId} not found." }
-    return ApprovalRequestQueryResult(payload = storage.getValue(query.requestId), revisionValue = revisions.getValue(query.requestId))
+    return ApprovalRequestQueryResult(payload = storage[query.requestId], revisionValue = revisions[query.requestId] ?: RevisionValue.NO_REVISION)
   }
 
   /**
@@ -45,9 +44,8 @@ class ApprovalRequestProjection(
    * @return approval request.
    */
   @QueryHandler
-  fun getOne(query: ApprovalRequestQuery): QueryResponseMessage<ApprovalRequest> {
-    require(storage.containsKey(query.requestId)) { "Approval request with id ${query.requestId} not found." }
-    return QueryResponseMessageResponseType.asQueryResponseMessage(storage.getValue(query.requestId), revisions.getValue(query.requestId).toMetaData())
+  fun getOne(query: ApprovalRequestQuery): QueryResponseMessage<ApprovalRequest?> {
+    return QueryResponseMessageResponseType.asQueryResponseMessage(storage[query.requestId], (revisions[query.requestId] ?: RevisionValue.NO_REVISION).toMetaData())
   }
 
   /**
@@ -155,6 +153,6 @@ data class ApprovalRequestQuery(
  * @param revision of the projection.
  */
 data class ApprovalRequestQueryResult(
-  val payload: ApprovalRequest,
+  val payload: ApprovalRequest?,
   override val revisionValue: RevisionValue
 ) : Revisionable

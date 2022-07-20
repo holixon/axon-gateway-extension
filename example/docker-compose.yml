@@ -1,0 +1,28 @@
+version: "3.5"
+
+networks:
+  taskpool-net:
+    name: taskpool
+
+volumes:
+  axonserver-data:
+    external: true
+
+services:
+  axonserver:
+    image: axoniq/axonserver
+    container_name: axonserver
+    ports:
+      - "8024:8024"
+      - "8124:8124"
+    volumes:
+      - axonserver-data:/opt/axonserver/data
+    networks:
+      - taskpool-net
+    environment:
+      AXONIQ_AXONSERVER_DEVMODE_ENABLED: "true"
+      AXONIQ_AXONSERVER_SSL_ENABLED: "false"
+      AXONIQ_AXONSERVER_ACCESSCONTROL_ENABLED: "false"
+      AXONIQ_AXONSERVER_NAME: "localhost"
+      AXONIQ_AXONSERVER_HOSTNAME: "localhost"
+      AXONIQ_AXONSERVER_AUTOCLUSTER_FIRST: "localhost"

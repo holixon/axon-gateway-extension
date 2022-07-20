@@ -2,7 +2,7 @@
 name: 'Enhancement request'
 about: 'Suggest an enhancement to an existing feature for Axon Framework - Gateway Extension'
 title:
-labels: 'type: enhancement'
+labels: 'Type: enhancement'
 
 ---
 

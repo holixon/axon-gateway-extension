@@ -16,12 +16,9 @@ internal class TestScenario(
   val commandGateway: CommandGateway,
   val queryGateway: QueryGateway
 ) {
-  companion object : KLogging() {
-    const val revision = 1L
-  }
+  companion object : KLogging()
 
-  fun createRequest(): String {
-    val requestId = UUID.randomUUID().toString()
+  fun createRequest(requestId: String = UUID.randomUUID().toString(), revision: Long = 1L): String {
     return commandGateway.send<String>(
       GenericCommandMessage.asCommandMessage<CreateApprovalRequestCommand>(
         CreateApprovalRequestCommand(
@@ -38,14 +35,38 @@ internal class TestScenario(
     }
   }
 
-  fun queryForRequest(requestId: String): ApprovalRequest? {
+  fun updateRequest(requestId: String = UUID.randomUUID().toString(), revision: Long = 1L): String {
+    return commandGateway.send<String>(
+      GenericCommandMessage.asCommandMessage<UpdateApprovalRequestCommand>(
+        UpdateApprovalRequestCommand(
+          requestId = requestId,
+          subject = "Subject",
+          currency = "EUR",
+          amount = "43"
+        )
+      ).withMetaData(RevisionValue(revision).toMetaData().apply {
+        logger.info("Sending update command for $requestId with metadata $this")
+      })
+    ).join().let {
+      requestId
+    }
+  }
+
+  fun queryForRequest(requestId: String, revision: Long = 1L): ApprovalRequest? {
     return queryGateway
       .query(
         GenericCommandMessage
           .asCommandMessage<ApprovalRequestQuery>(ApprovalRequestQuery(requestId.trim()))
           .withMetaData(RevisionQueryParameters(revision).toMetaData()),
         QueryResponseMessageResponseType.queryResponseMessageResponseType<ApprovalRequest>()
-      )
+      ).handle { result, throwable ->
+        if (throwable == null) {
+          result
+        } else {
+          logger.error(throwable) { "Error occured during query." }
+          null
+        }
+      }
       .join()
   }
 }

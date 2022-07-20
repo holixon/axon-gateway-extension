@@ -37,7 +37,8 @@ class QueryResponseMessageResponseType<T : Any> : AbstractResponseType<T> {
      * @return message to be returned by the query handler.
      */
     @JvmStatic
-    inline fun <reified T : Any> asQueryResponseMessage(payload: Any?): QueryResponseMessage<T> = GenericQueryResponseMessage.asNullableResponseMessage(T::class.java, payload)
+    inline fun <reified T : Any?> asQueryResponseMessage(payload: Any?): QueryResponseMessage<T> = GenericQueryResponseMessage
+      .asNullableResponseMessage(T::class.java, payload)
 
     /**
      * Creates a query response message with given payload and metadata.
@@ -47,7 +48,7 @@ class QueryResponseMessageResponseType<T : Any> : AbstractResponseType<T> {
      * @return message to be returned by the query handler.
      */
     @JvmStatic
-    inline fun <reified T : Any> asQueryResponseMessage(payload: Any?, metaData: MetaData): QueryResponseMessage<T> = GenericQueryResponseMessage
+    inline fun <reified T : Any?> asQueryResponseMessage(payload: Any?, metaData: MetaData): QueryResponseMessage<T> = GenericQueryResponseMessage
         .asNullableResponseMessage(T::class.java, payload)
         .andMetaData(metaData)
 
@@ -58,8 +59,8 @@ class QueryResponseMessageResponseType<T : Any> : AbstractResponseType<T> {
      * @return message to be passed to query update emitter.
      */
     @JvmStatic
-    inline fun <reified T : Any> asSubscriptionUpdateMessage(payload: Any?): SubscriptionQueryUpdateMessage<T> = GenericSubscriptionQueryUpdateMessage
-        .asUpdateMessage<T>(payload)
+    inline fun <reified T : Any?> asSubscriptionUpdateMessage(payload: Any?): SubscriptionQueryUpdateMessage<T> = GenericSubscriptionQueryUpdateMessage
+        .asUpdateMessage(payload)
 
     /**
      * Creates a query subscription update message with given payload and metadata.
