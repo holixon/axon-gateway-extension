@@ -1,13 +1,10 @@
 package io.holixon.axon.gateway.example
 
-import org.awaitility.Awaitility
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
-import java.time.Duration
 import java.util.*
 import kotlin.test.assertNotNull
 
@@ -23,14 +20,15 @@ internal class JacksonApplicationITest {
 
   @Test
   fun `should create and query for request using jackson`() {
-    // create request
+    scenario.createRequest(requestId, revision = 1L)
+
+    assertNotNull(scenario.queryForRequest(requestId, revision = 1L))
+
     Thread {
-      Thread.sleep(2_000)
-      scenario.createRequest(requestId)
+      Thread.sleep(500)
+      scenario.updateRequest(requestId, revision = 2L)
     }.start()
 
-    Awaitility.await("Could not find request for id $requestId").atMost(Duration.ofSeconds(13)).untilAsserted {
-      assertNotNull(scenario.queryForRequest(requestId))
-    }
+    assertNotNull(scenario.queryForRequest(requestId, revision = 2L))
   }
 }
