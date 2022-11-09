@@ -25,6 +25,10 @@ import java.util.concurrent.CompletableFuture
 
 internal class DispatchAwareAxonServerCommandBusTest {
 
+  companion object {
+    const val COMMAND_NAME = "command"
+  }
+
   private val configuration: AxonServerConfiguration = AxonServerConfiguration.builder().build()
   private val commandDispatchStrategy: CommandDispatchStrategy = mockk()
   private val messageHandler: MessageHandler<in CommandMessage<*>?> = mockk()
@@ -60,28 +64,28 @@ internal class DispatchAwareAxonServerCommandBusTest {
 
   @Test
   fun `registers handler local only`() {
-    every { commandDispatchStrategy.registerRemote(any(), any()) }.returns(false)
-    bus.subscribe("command", messageHandler)
+    every { commandDispatchStrategy.registerRemote(any(), any()) } returns false
+    bus.subscribe(COMMAND_NAME, messageHandler)
     verify {
-      localSegment.subscribe("command", messageHandler)
+      localSegment.subscribe(COMMAND_NAME, messageHandler)
       axonServerCommandChannel wasNot called
     }
   }
 
   @Test
   fun `registers handler local and remote`() {
-    every { commandDispatchStrategy.registerRemote(any(), any()) }.returns(true)
-    bus.subscribe("command", messageHandler)
+    every { commandDispatchStrategy.registerRemote(any(), any()) } returns true
+    bus.subscribe(COMMAND_NAME, messageHandler)
     verify {
-      localSegment.subscribe("command", messageHandler)
-      axonServerCommandChannel.registerCommandHandler(any(), any(), "command")
+      localSegment.subscribe(COMMAND_NAME, messageHandler)
+      axonServerCommandChannel.registerCommandHandler(any(), any(), COMMAND_NAME)
     }
   }
 
   @Test
   fun `dispatches command local only`() {
 
-    every { commandDispatchStrategy.dispatchRemote<TestCommand, Void>(any(), any()) }.returns(false)
+    every { commandDispatchStrategy.dispatchRemote<TestCommand, Void>(any(), any()) } returns false
     val message = GenericCommandMessage.asCommandMessage<TestCommand>(TestCommand("4711"))
 
     bus.dispatch(message)
@@ -95,7 +99,7 @@ internal class DispatchAwareAxonServerCommandBusTest {
   @Test
   fun `dispatches command remote`() {
 
-    every { commandDispatchStrategy.dispatchRemote<TestCommand, Void>(any(), any()) }.returns(true)
+    every { commandDispatchStrategy.dispatchRemote<TestCommand, Void>(any(), any()) } returns true
     val command = TestCommand("4711")
     val message = GenericCommandMessage.asCommandMessage<TestCommand>(command)
 

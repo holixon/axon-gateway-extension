@@ -22,6 +22,10 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Import
 import org.springframework.context.annotation.Primary
 
+/**
+ * Configuration replacing default AxonServerBusAutoConfiguration allowing control on registration and dispatch
+ * of commands based on [CommandDispatchStrategy].
+ */
 // inherit the remaining annotations from super class
 @AutoConfigureAfter(CommandDispatchStrategyConfiguration::class)
 // enabled only if the axon-server is enabled and the dispatch aware gateway is enabled.

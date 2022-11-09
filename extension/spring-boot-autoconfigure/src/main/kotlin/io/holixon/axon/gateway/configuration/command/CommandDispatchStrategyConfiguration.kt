@@ -15,6 +15,9 @@ import org.springframework.context.annotation.Bean
 import java.util.function.Predicate
 import java.util.function.Predicate.not
 
+/**
+ * Configuration of the command dispatch strategy.
+ */
 @EnableConfigurationProperties(CommandDispatchStrategyProperties::class)
 class CommandDispatchStrategyConfiguration {
 
@@ -46,10 +49,15 @@ class CommandDispatchStrategyConfiguration {
     )
   }
 
+  /**
+   * Provides property-based matchers, if no custom predicate is defined.
+   * @param properties properties to construct predicates.
+   * @return set of predicates for command names.
+   */
   @Bean
   @ConditionalOnMissingQualifiedBean(beanClass = Predicate::class, qualifier = COMMAND_DISPATCH)
   @Qualifier(COMMAND_DISPATCH)
-  fun propertyBasedCommandNames(properties: CommandDispatchStrategyProperties): Set<Predicate<String>> {
+  fun propertyBasedCommandNamePredicates(properties: CommandDispatchStrategyProperties): Set<Predicate<String>> {
     val excludeCommandNames = properties.excludeCommandNames.map { commandName -> Predicate<String> { name -> commandName == name } }
     val excludeCommandPackages = properties.excludeCommandPackages.map { packageName -> Predicate<String> { name -> name.startsWith(packageName) } }
     val allExcludes = excludeCommandNames + excludeCommandPackages
