@@ -29,13 +29,13 @@ internal class DispatchAwareAxonServerCommandBusConfigurationTest {
       .withPropertyValues(
         "axon.axonserver.enabled=true",
         "axon-gateway.command.dispatch-aware.enabled=true",
-        "axon-gateway.command.dispatch-aware.strategy.command-packages=de.foo,il.bar,ua.zee",
+        "axon-gateway.command.dispatch-aware.strategy.exclude-command-packages=de.foo,il.bar,ua.zee",
       ).run {
 
         assertThat(it.getBean(CommandDispatchStrategyProperties::class.java)).isNotNull
         val props: CommandDispatchStrategyProperties = it.getBean(CommandDispatchStrategyProperties::class.java)
 
-        assertThat(props.commandPackages).isEqualTo(setOf("de.foo", "il.bar", "ua.zee"))
+        assertThat(props.excludeCommandPackages).isEqualTo(setOf("de.foo", "il.bar", "ua.zee"))
 
         assertThat(it.getBean(CommandBus::class.java)).isNotNull
         val bus = it.getBean(CommandBus::class.java)
@@ -50,13 +50,13 @@ internal class DispatchAwareAxonServerCommandBusConfigurationTest {
       .withPropertyValues(
         "axon.axonserver.enabled=true",
         "axon-gateway.command.dispatch-aware.enabled=false",
-        "axon-gateway.command.dispatch-aware.strategy.command-packages=de.foo,il.bar,ua.zee",
+        "axon-gateway.command.dispatch-aware.strategy.exclude-command-packages=de.foo,il.bar,ua.zee",
       ).run {
 
         assertThat(it.getBean(CommandDispatchStrategyProperties::class.java)).isNotNull
         val props: CommandDispatchStrategyProperties = it.getBean(CommandDispatchStrategyProperties::class.java)
 
-        assertThat(props.commandPackages).isEqualTo(setOf("de.foo", "il.bar", "ua.zee"))
+        assertThat(props.excludeCommandPackages).isEqualTo(setOf("de.foo", "il.bar", "ua.zee"))
 
         assertThat(it.getBean(CommandBus::class.java)).isNotNull
         val bus = it.getBean(CommandBus::class.java)

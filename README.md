@@ -107,7 +107,7 @@ axon-gateway:
 ```
 
 Now you need to specify a `CommandDispatchStrategy`. You can do this manually, by providing a bean factory for this, a component 
-implementing this interface or by using the predefined components using properties to configure predicates for command names used for 
+implementing this interface or by using the predefined components using properties to configure predicates for command names excluded from 
 remote-only registration. For doing so, specify the following properties in your `application.yml` 
 
 ```yaml
@@ -116,10 +116,10 @@ axon-gateway:
     dispatch-aware:
       enabled: true
       strategy:
-        command-names:
+        exclude-command-names:
           - io.holixon.axon.gateway.example.UpdateApprovalRequestCommand
           - io.holixon.axon.gateway.example.OtherCommand
-        command-packages:
+        exclude-command-packages:
           - example.matching.all.commands.in.this.package.and.sub.packages
 ```
 Please check the implementations of `CommandDispatchStrategy` for more details.

@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import java.util.function.Predicate
+import java.util.function.Predicate.not
 
 @EnableConfigurationProperties(CommandDispatchStrategyProperties::class)
 class CommandDispatchStrategyConfiguration {
@@ -48,8 +49,15 @@ class CommandDispatchStrategyConfiguration {
   @Bean
   @ConditionalOnMissingQualifiedBean(beanClass = Predicate::class, qualifier = COMMAND_DISPATCH)
   @Qualifier(COMMAND_DISPATCH)
-  fun propertyBasedCommandNames(properties: CommandDispatchStrategyProperties): Set<Predicate<String>> =
-    properties.commandNames.map { commandName -> Predicate<String> { name -> commandName == name } }.toSet() +
-      properties.commandPackages.map { packageName -> Predicate<String> { name -> name.startsWith(packageName) } }
+  fun propertyBasedCommandNames(properties: CommandDispatchStrategyProperties): Set<Predicate<String>> {
+    val excludeCommandNames = properties.excludeCommandNames.map { commandName -> Predicate<String> { name -> commandName == name } }
+    val excludeCommandPackages = properties.excludeCommandPackages.map { packageName -> Predicate<String> { name -> name.startsWith(packageName) } }
+    val allExcludes = excludeCommandNames + excludeCommandPackages
+    val any = Predicate<String> { value ->
+      allExcludes.any { predicate -> predicate.test(value) }
+    }
+    return setOf(not(any))
+  }
+
 
 }

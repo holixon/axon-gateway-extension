@@ -9,6 +9,6 @@ import org.springframework.boot.context.properties.ConstructorBinding
 @ConstructorBinding
 @ConfigurationProperties("axon-gateway.command.dispatch-aware.strategy")
 data class CommandDispatchStrategyProperties(
-  val commandNames: Set<String> = setOf(),
-  val commandPackages: Set<String> = setOf()
+  val excludeCommandNames: Set<String> = setOf(),
+  val excludeCommandPackages: Set<String> = setOf()
 )
