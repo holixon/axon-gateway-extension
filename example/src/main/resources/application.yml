@@ -10,7 +10,7 @@ axon-gateway:
     dispatch-aware:
       enabled: true
       strategy:
-        command-names:
+        exclude-command-names:
           - io.holixon.axon.gateway.example.UpdateApprovalRequestCommand
 axon:
   gateway:
