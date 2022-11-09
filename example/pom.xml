@@ -58,6 +58,11 @@
       <artifactId>springdoc-openapi-ui</artifactId>
       <version>${springdoc-ui.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-kotlin</artifactId>
+      <version>${springdoc-ui.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>

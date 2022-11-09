@@ -6,9 +6,18 @@ axon-gateway:
     type: revision-aware
     revision-aware:
       default-query-timeout: 10_000
-
+  command:
+    dispatch-aware:
+      enabled: true
+      strategy:
+        command-names:
+          - io.holixon.axon.gateway.example.UpdateApprovalRequestCommand
 axon:
   gateway:
     version: '@axon.version@'
   framework:
     version: '@project.version@'
+
+logging:
+  level:
+    io.holixon.axon.gateway.command: DEBUG

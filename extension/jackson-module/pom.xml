@@ -39,6 +39,12 @@
       <artifactId>jackson-module-kotlin</artifactId>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.axonframework</groupId>
+      <artifactId>axon-messaging</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
 </project>
