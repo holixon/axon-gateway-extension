@@ -52,7 +52,7 @@ commandGateway.send<Void>(
 )
 ```
 
-Now you can query for a certain revision by, if the result contains the revision information inside of the payload 
+Now you can query for a certain revision by, if the result contains the revision information inside the payload 
 (the query result implements `Revisionable`).
 
 ```kotlin
@@ -65,7 +65,7 @@ queryGateway.query(
 ```
 
 As alternative, you can query for a certain revision by if the query method returns `QueryResponseMessage<T>` and carries
-meta data inside of the message `metadata` field..
+metadata inside the message `metadata` field.
 
 ```kotlin
 queryGateway.query(
