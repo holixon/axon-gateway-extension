@@ -11,7 +11,7 @@ axon-gateway:
       enabled: true
       strategy:
         exclude-command-names:
-          - io.holixon.axon.gateway.example.UpdateApprovalRequestCommand
+          - io.holixon.axon.gateway.example.UpdateApprovalRequestCommand # Update will be registered and sent via Local Segment only (not registered on Axon Server)
 axon:
   gateway:
     version: '@axon.version@'
