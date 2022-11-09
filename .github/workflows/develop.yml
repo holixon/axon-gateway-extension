@@ -27,9 +27,9 @@ jobs:
             ${{ runner.os }}-maven
 
       - name: Set up JDK
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
+          distribution: temurin
           java-version: 11.0.5
 
       - name: Prepare Maven Wrapper
