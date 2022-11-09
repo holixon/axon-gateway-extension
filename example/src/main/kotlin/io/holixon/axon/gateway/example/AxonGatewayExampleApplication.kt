@@ -57,6 +57,9 @@ class AxonGatewayExampleApplication {
     .registerModule(AxonGatewayJacksonModule())
 
 
+  /**
+   * Provides an Xstream instance.
+   */
   @Bean
   fun unsafeXstream() = XStream().apply {
     addPermission(AnyTypePermission.ANY)
