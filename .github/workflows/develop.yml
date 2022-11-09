@@ -18,19 +18,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Cache .m2
-        uses: actions/cache@v2
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven
-
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          distribution: temurin
-          java-version: 11.0.5
+          distribution: 'temurin'
+          java-version: '11.0.5'
+          cache: 'maven'
 
       - name: Prepare Maven Wrapper
         run: chmod +x ./mvnw
