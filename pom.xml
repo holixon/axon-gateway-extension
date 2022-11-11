@@ -8,7 +8,7 @@
 
   <groupId>io.holixon.axon.gateway</groupId>
   <artifactId>axon-gateway-extension-parent</artifactId>
-  <version>0.1.2-SNAPSHOT</version>
+  <version>1.0.0</version>
   <packaging>pom</packaging>
 
   <modules>
