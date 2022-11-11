@@ -24,15 +24,15 @@ internal class CommandDispatchStrategyPropertiesTest {
         assertThat(it.getBean(CommandDispatchStrategyProperties::class.java)).isNotNull
         val props: CommandDispatchStrategyProperties = it.getBean(CommandDispatchStrategyProperties::class.java)
 
-        assertThat(props.excludeCommandPackages).isEqualTo(setOf("de.foo", "il.bar", "ua.zee"))
+        assertThat(props.excludeCommandPackages).isEqualTo(setOf("de.foo1", "il.bar1", "ua.zee1"))
         assertThat(props.excludeCommandNames).isEqualTo(setOf("foo.Name", "bar.Other", "zee.Third"))
 
         assertThat(it.getBean(CommandDispatchStrategy::class.java)).isNotNull
         val strategy = it.getBean(CommandDispatchStrategy::class.java)
 
-        assertThat(strategy.registerRemote("de.foo.Some1") {}).isFalse
-        assertThat(strategy.registerRemote("il.bar.Some2") {}).isFalse
-        assertThat(strategy.registerRemote("ua.zee.Some3") {}).isFalse
+        assertThat(strategy.registerRemote("de.foo1.Some1") {}).isFalse
+        assertThat(strategy.registerRemote("il.bar1.Some2") {}).isFalse
+        assertThat(strategy.registerRemote("ua.zee1.Some3") {}).isFalse
         assertThat(strategy.registerRemote("foo.Name") {}).isFalse
         assertThat(strategy.registerRemote("bar.Other") {}).isFalse
         assertThat(strategy.registerRemote("zee.Third") {}).isFalse
