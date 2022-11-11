@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holixon.axon.gateway</groupId>
     <artifactId>axon-gateway-extension-parent</artifactId>
-    <version>0.1.1</version>
+    <version>1.0.0</version>
   </parent>
 
   <artifactId>axon-gateway-example</artifactId>
@@ -19,7 +19,7 @@
     <maven.sources.skip>true</maven.sources.skip>
     <maven.install.skip>false</maven.install.skip>
     <gpg.skip>true</gpg.skip>
-    <springdoc-ui.version>1.6.9</springdoc-ui.version>
+    <springdoc-ui.version>1.6.12</springdoc-ui.version>
   </properties>
 
   <dependencies>
@@ -56,6 +56,11 @@
     <dependency>
       <groupId>org.springdoc</groupId>
       <artifactId>springdoc-openapi-ui</artifactId>
+      <version>${springdoc-ui.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-kotlin</artifactId>
       <version>${springdoc-ui.version}</version>
     </dependency>
 

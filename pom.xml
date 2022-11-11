@@ -8,7 +8,7 @@
 
   <groupId>io.holixon.axon.gateway</groupId>
   <artifactId>axon-gateway-extension-parent</artifactId>
-  <version>0.1.1</version>
+  <version>1.0.0</version>
   <packaging>pom</packaging>
 
   <modules>
@@ -19,22 +19,22 @@
   </modules>
 
   <properties>
-    <axon.version>4.5.14</axon.version>
+    <axon.version>4.6.2</axon.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <kotlin.version>1.7.10</kotlin.version>
-    <kotlin-logging.version>2.1.23</kotlin-logging.version>
+    <kotlin.version>1.7.21</kotlin.version>
+    <kotlin-logging.version>3.0.4</kotlin-logging.version>
 
     <java.version>11</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
 
-    <mockk.version>1.12.4</mockk.version>
+    <mockk.version>1.13.2</mockk.version>
     <junit.jupiter.version>5.7.0</junit.jupiter.version>
     <slf4j.version>1.7.30</slf4j.version>
     <log4j.version>2.13.3</log4j.version>
-    <dokka.version>1.7.10</dokka.version>
+    <dokka.version>1.7.20</dokka.version>
 
-    <springboot.version>2.7.1</springboot.version>
+    <springboot.version>2.7.5</springboot.version>
 
     <!-- Skip KDoc generation by default -->
     <dokka.skip>true</dokka.skip>
@@ -78,7 +78,7 @@
         <scope>import</scope>
       </dependency>
 
-      <!-- second: SpringBoot Import (will not mess-up the kotlin.version) -->
+      <!-- second: SpringBoot Import -->
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
@@ -87,36 +87,17 @@
         <type>pom</type>
       </dependency>
 
-      <!-- AxonFramework -->
       <dependency>
         <groupId>org.axonframework</groupId>
-        <artifactId>axon-configuration</artifactId>
+        <artifactId>axon-bom</artifactId>
         <version>${axon.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.axonframework</groupId>
-        <artifactId>axon-modelling</artifactId>
-        <version>${axon.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.axonframework</groupId>
-        <artifactId>axon-messaging</artifactId>
-        <version>${axon.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.axonframework</groupId>
-        <artifactId>axon-test</artifactId>
-        <version>${axon.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.axonframework</groupId>
-        <artifactId>axon-spring-boot-starter</artifactId>
-        <version>${axon.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
       </dependency>
 
       <dependency>
         <groupId>io.mockk</groupId>
-        <artifactId>mockk</artifactId>
+        <artifactId>mockk-jvm</artifactId>
         <version>${mockk.version}</version>
         <scope>test</scope>
       </dependency>
@@ -147,7 +128,7 @@
     </dependency>
     <dependency>
       <groupId>io.mockk</groupId>
-      <artifactId>mockk</artifactId>
+      <artifactId>mockk-jvm</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -269,7 +250,7 @@
         <!-- Resources -->
         <plugin>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>3.2.0</version>
+          <version>3.3.0</version>
           <configuration>
             <encoding>UTF-8</encoding>
           </configuration>
@@ -278,14 +259,14 @@
         <!-- Install -->
         <plugin>
           <artifactId>maven-install-plugin</artifactId>
-          <version>3.0.0</version>
+          <version>3.0.1</version>
         </plugin>
 
         <!-- Assembly -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>3.4.1</version>
+          <version>3.4.2</version>
           <configuration>
             <descriptorSourceDirectory>assembly</descriptorSourceDirectory>
             <archiverConfig>
@@ -395,7 +376,7 @@
         <!-- JAR -->
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.2.2</version>
+          <version>3.3.0</version>
           <configuration>
             <archive>
               <manifest>
@@ -448,7 +429,7 @@
         <plugin>
           <groupId>com.amashchenko.maven.plugin</groupId>
           <artifactId>gitflow-maven-plugin</artifactId>
-          <version>1.18.0</version>
+          <version>1.19.0</version>
           <configuration>
             <gitFlowConfig>
               <productionBranch>master</productionBranch>
