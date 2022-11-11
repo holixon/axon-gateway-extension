@@ -18,14 +18,14 @@ internal class CommandDispatchStrategyPropertiesTest {
 
       .withPropertyValues(
         "axon-gateway.command.dispatch-aware.strategy.exclude-command-names=foo.Name,bar.Other,zee.Third",
-        "axon-gateway.command.dispatch-aware.strategy.exclude-command-packages=de.foo,il.bar,ua.zee",
+        "axon-gateway.command.dispatch-aware.strategy.exclude-command-packages=de.foo1,il.bar1,ua.zee1",
       ).run {
 
         assertThat(it.getBean(CommandDispatchStrategyProperties::class.java)).isNotNull
         val props: CommandDispatchStrategyProperties = it.getBean(CommandDispatchStrategyProperties::class.java)
 
-        assertThat(props.excludeCommandPackages).isEqualTo(setOf("de.foo1", "il.bar1", "ua.zee1"))
         assertThat(props.excludeCommandNames).isEqualTo(setOf("foo.Name", "bar.Other", "zee.Third"))
+        assertThat(props.excludeCommandPackages).isEqualTo(setOf("de.foo1", "il.bar1", "ua.zee1"))
 
         assertThat(it.getBean(CommandDispatchStrategy::class.java)).isNotNull
         val strategy = it.getBean(CommandDispatchStrategy::class.java)

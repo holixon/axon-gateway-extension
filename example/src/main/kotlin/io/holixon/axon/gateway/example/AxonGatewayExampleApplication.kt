@@ -58,7 +58,7 @@ class AxonGatewayExampleApplication {
 
 
   /**
-   * Provides an Xstream instance.
+   * Provides a Xstream instance.
    */
   @Bean
   fun unsafeXstream() = XStream().apply {
