@@ -10,5 +10,6 @@
   Axon Framework: ${axon.framework.version}
   Axon Gateway:   ${axon.gateway.version}
 
-  Swagger UI:     http://localhost:${server.port}/swagger-ui/
+  Swagger UI:     http://localhost:${server.port}/swagger-ui/index.html
+  AxonServer:     http://localhost:8024/
 

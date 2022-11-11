@@ -36,7 +36,7 @@ class AxonGatewayExampleApplication {
 
   /**
    * Factory function creating correlation data provider for revision information.
-   * We don't want to explicitly pump revision meta data from command to event.
+   * We don't want to explicitly pump revision metadata from command to event.
    */
   @Bean
   fun revisionAwareCorrelationDataProvider(): CorrelationDataProvider {
@@ -57,6 +57,9 @@ class AxonGatewayExampleApplication {
     .registerModule(AxonGatewayJacksonModule())
 
 
+  /**
+   * Provides a Xstream instance.
+   */
   @Bean
   fun unsafeXstream() = XStream().apply {
     addPermission(AnyTypePermission.ANY)

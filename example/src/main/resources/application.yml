@@ -6,9 +6,18 @@ axon-gateway:
     type: revision-aware
     revision-aware:
       default-query-timeout: 10_000
-
+  command:
+    dispatch-aware:
+      enabled: true
+      strategy:
+        exclude-command-names:
+          - io.holixon.axon.gateway.example.UpdateApprovalRequestCommand # Update will be registered and sent via Local Segment only (not registered on Axon Server)
 axon:
   gateway:
     version: '@axon.version@'
   framework:
     version: '@project.version@'
+
+logging:
+  level:
+    io.holixon.axon.gateway.command: DEBUG
