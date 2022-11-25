@@ -30,7 +30,6 @@ fun main(args: Array<String>) {
 /**
  * Example application.
  */
-@EnableRevisionAwareQueryGateway
 @SpringBootApplication
 class AxonGatewayExampleApplication {
 

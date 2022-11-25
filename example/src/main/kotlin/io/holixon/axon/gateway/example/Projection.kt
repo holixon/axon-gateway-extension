@@ -11,6 +11,7 @@ import org.axonframework.queryhandling.QueryUpdateEmitter
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * In-memory storage for approval requests.
@@ -25,8 +26,8 @@ class ApprovalRequestProjection(
     val logger: Logger = LoggerFactory.getLogger(ApprovalRequestProjection::class.java)
   }
 
-  private val storage: MutableMap<String, ApprovalRequest> = mutableMapOf()
-  private val revisions: MutableMap<String, RevisionValue> = mapOf<String, RevisionValue>().withDefault { RevisionValue.NO_REVISION }.toMutableMap()
+  private val storage: ConcurrentHashMap<String, ApprovalRequest> = ConcurrentHashMap()
+  private val revisions: ConcurrentHashMap<String, RevisionValue> = ConcurrentHashMap()
 
   /**
    * Query handler.
@@ -35,7 +36,11 @@ class ApprovalRequestProjection(
    */
   @QueryHandler
   fun getOneInResult(query: ApprovalRequestQuery): ApprovalRequestQueryResult {
-    return ApprovalRequestQueryResult(payload = storage[query.requestId], revisionValue = revisions[query.requestId] ?: RevisionValue.NO_REVISION)
+    logger.info("Query one for ${query.requestId} with revision info in result.")
+    val payload = storage[query.requestId]
+    val revision = revisions[query.requestId] ?: RevisionValue.NO_REVISION
+    logger.info("Found payload: `$payload`, revision `$revision`")
+    return ApprovalRequestQueryResult(payload = payload, revisionValue = revision)
   }
 
   /**
@@ -45,7 +50,11 @@ class ApprovalRequestProjection(
    */
   @QueryHandler
   fun getOne(query: ApprovalRequestQuery): QueryResponseMessage<ApprovalRequest?> {
-    return QueryResponseMessageResponseType.asQueryResponseMessage(storage[query.requestId], (revisions[query.requestId] ?: RevisionValue.NO_REVISION).toMetaData())
+    logger.info("Query one for ${query.requestId} with revision in metadata.")
+    val payload = storage[query.requestId]
+    val revision = revisions[query.requestId] ?: RevisionValue.NO_REVISION
+    logger.info("Found payload: `$payload`, revision `$revision`")
+    return QueryResponseMessageResponseType.asQueryResponseMessage(payload, revision.toMetaData())
   }
 
   /**
@@ -56,7 +65,7 @@ class ApprovalRequestProjection(
   @EventHandler
   fun on(evt: ApprovalRequestCreatedEvent, meta: MetaData) {
     // overwrite with version from events
-    logger.info("Received ${evt.requestId}")
+    logger.info("Received created for ${evt.requestId} with revision ${RevisionValue.fromMetaData(meta).revision}")
     revisions[evt.requestId] = RevisionValue.fromMetaData(meta)
     this.storage[evt.requestId] = ApprovalRequest(
       requestId = evt.requestId,
@@ -74,6 +83,7 @@ class ApprovalRequestProjection(
    */
   @EventHandler
   fun on(evt: ApprovalRequestUpdatedEvent, meta: MetaData) {
+    logger.info("Received updated for ${evt.requestId} with revision ${RevisionValue.fromMetaData(meta).revision}")
     if (checkAndUpdateRevision(evt.requestId, RevisionValue.fromMetaData(meta))) {
       this.storage[evt.requestId] = ApprovalRequest(
         requestId = evt.requestId,
@@ -109,6 +119,7 @@ class ApprovalRequestProjection(
    */
   private fun updateSubscriptions(requestId: String) {
 
+    logger.info("Emitting update for $requestId")
     // update queries for QueryResponseMessageResponseType
     queryUpdateEmitter.emit(
       ApprovalRequestQuery::class.java,

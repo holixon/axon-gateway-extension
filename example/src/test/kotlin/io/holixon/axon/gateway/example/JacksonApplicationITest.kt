@@ -1,5 +1,7 @@
 package io.holixon.axon.gateway.example
 
+import org.awaitility.kotlin.await
+import org.awaitility.kotlin.untilAsserted
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -21,14 +23,14 @@ internal class JacksonApplicationITest {
   @Test
   fun `should create and query for request using jackson`() {
     scenario.createRequest(requestId, revision = 1L)
+    await untilAsserted {
+      assertNotNull(scenario.queryForRequest(requestId, revision = 1L))
+    }
 
-    assertNotNull(scenario.queryForRequest(requestId, revision = 1L))
-
-    Thread {
-      Thread.sleep(500)
-      scenario.updateRequest(requestId, revision = 2L)
-    }.start()
-
-    assertNotNull(scenario.queryForRequest(requestId, revision = 2L))
+    scenario.updateRequest(requestId, revision = 2L)
+    await untilAsserted {
+      assertNotNull(scenario.queryForRequest(requestId, revision = 2L))
+    }
   }
+
 }

@@ -11,31 +11,41 @@ internal class CommandDispatchStrategyPropertiesTest {
   private val contextRunner = ApplicationContextRunner()
     .withConfiguration(UserConfigurations.of(CommandDispatchStrategyConfiguration::class.java))
 
+  companion object {
+    const val FOO = "foo.Name"
+    const val BAR = "bar.Other"
+    const val ZEE = "zee.Third"
+
+    const val P1 = "de.foo"
+    const val P2 = "il.bar"
+    const val P3 = "ua.zee"
+  }
+
   @Test
   fun `construct predicates based on properties`() {
 
     contextRunner
 
       .withPropertyValues(
-        "axon-gateway.command.dispatch-aware.strategy.exclude-command-names=foo.Name,bar.Other,zee.Third",
-        "axon-gateway.command.dispatch-aware.strategy.exclude-command-packages=de.foo1,il.bar1,ua.zee1",
+        "axon-gateway.command.dispatch-aware.strategy.exclude-command-names=$FOO,$BAR,$ZEE",
+        "axon-gateway.command.dispatch-aware.strategy.exclude-command-packages=$P1,$P2,$P3",
       ).run {
 
         assertThat(it.getBean(CommandDispatchStrategyProperties::class.java)).isNotNull
         val props: CommandDispatchStrategyProperties = it.getBean(CommandDispatchStrategyProperties::class.java)
 
-        assertThat(props.excludeCommandNames).isEqualTo(setOf("foo.Name", "bar.Other", "zee.Third"))
-        assertThat(props.excludeCommandPackages).isEqualTo(setOf("de.foo1", "il.bar1", "ua.zee1"))
+        assertThat(props.excludeCommandNames).isEqualTo(setOf(FOO, BAR, ZEE))
+        assertThat(props.excludeCommandPackages).isEqualTo(setOf(P1, P2, P3))
 
         assertThat(it.getBean(CommandDispatchStrategy::class.java)).isNotNull
         val strategy = it.getBean(CommandDispatchStrategy::class.java)
 
-        assertThat(strategy.registerRemote("de.foo1.Some1") {}).isFalse
-        assertThat(strategy.registerRemote("il.bar1.Some2") {}).isFalse
-        assertThat(strategy.registerRemote("ua.zee1.Some3") {}).isFalse
-        assertThat(strategy.registerRemote("foo.Name") {}).isFalse
-        assertThat(strategy.registerRemote("bar.Other") {}).isFalse
-        assertThat(strategy.registerRemote("zee.Third") {}).isFalse
+        assertThat(strategy.registerRemote("$P1.Some1") {}).isFalse
+        assertThat(strategy.registerRemote("$P2.Some2") {}).isFalse
+        assertThat(strategy.registerRemote("$P3.Some3") {}).isFalse
+        assertThat(strategy.registerRemote(FOO) {}).isFalse
+        assertThat(strategy.registerRemote(BAR) {}).isFalse
+        assertThat(strategy.registerRemote(ZEE) {}).isFalse
 
         assertThat(strategy.registerRemote("random.Name") {}).isTrue
       }
@@ -48,23 +58,22 @@ internal class CommandDispatchStrategyPropertiesTest {
     contextRunner
       .withUserConfiguration(ManualPredicateConfiguration::class.java)
       .withPropertyValues(
-        "axon-gateway.command.dispatch-aware.strategy.exclude-command-names=foo.Name,bar.Other,zee.Third",
-        "axon-gateway.command.dispatch-aware.strategy.exclude-command-packages=de.foo,il.bar,ua.zee",
+        "axon-gateway.command.dispatch-aware.strategy.exclude-command-names=$FOO,$BAR,$ZEE",
+        "axon-gateway.command.dispatch-aware.strategy.exclude-command-packages=$P1,$P2,$P3",
       ).run {
 
         assertThat(it.getBean(CommandDispatchStrategyProperties::class.java)).isNotNull
         val props: CommandDispatchStrategyProperties = it.getBean(CommandDispatchStrategyProperties::class.java)
 
         // properties are there
-        assertThat(props.excludeCommandPackages).isEqualTo(setOf("de.foo", "il.bar", "ua.zee"))
-        assertThat(props.excludeCommandNames).isEqualTo(setOf("foo.Name", "bar.Other", "zee.Third"))
+        assertThat(props.excludeCommandNames).isEqualTo(setOf(FOO, BAR, ZEE))
+        assertThat(props.excludeCommandPackages).isEqualTo(setOf(P1, P2, P3))
 
         assertThat(it.getBean(CommandDispatchStrategy::class.java)).isNotNull
         val strategy = it.getBean(CommandDispatchStrategy::class.java)
 
         // configured beans are used instead
-        assertThat(strategy.registerRemote("foo.Name") {}).isTrue // ignore the one from property
-
+        assertThat(strategy.registerRemote(FOO) {}).isTrue // ignore the one from property
         assertThat(strategy.registerRemote("random.Name") {}).isFalse
 
       }

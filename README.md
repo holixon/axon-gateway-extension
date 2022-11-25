@@ -8,19 +8,6 @@ _Note:_ This extension is still in an experimental stage.
 
 ## Getting started
 
-### Dependencies for the extension
-
-**Maven**
-
-```xml
-
-<dependency>
-  <groupId>io.holixon.axon.gateway</groupId>
-  <artifactId>axon-gateway-extension</artifactId>
-  <version>0.1.0</version>
-</dependency>
-```
-
 ### Dependencies for the Spring Boot Starter
 
 **Maven**
@@ -30,7 +17,7 @@ _Note:_ This extension is still in an experimental stage.
 <dependency>
   <groupId>io.holixon.axon.gateway</groupId>
   <artifactId>axon-gateway-springboot-starter</artifactId>
-  <version>0.1.0</version>
+  <version>${axon-gateway-extension.version}</version>
 </dependency>
 ```
 
@@ -40,7 +27,7 @@ _Note:_ This extension is still in an experimental stage.
 
 Imagine, you are sending a command, and you want to query for the result of its effect in the projection.
 A Revision-Aware Gateway is capable of retrieving for a certain (minimal) revision of the projection. In
-order to do so, you need to pass the revision along with your command. To do so, add the metadata using the
+order to do so, you need to pass the revision along with your command, packaged in metadata by using the
 helper method:
 
 ```kotlin
@@ -56,7 +43,7 @@ commandGateway.send<Void>(
 )
 ```
 
-Now you can query for a certain revision by, if the result contains the revision information inside the payload
+Now you can query for a certain revision, if the result contains the revision information inside the payload
 (the query result implements `Revisionable`).
 
 ```kotlin
@@ -68,7 +55,7 @@ queryGateway.query(
 ).join()
 ```
 
-As alternative, you can query for a certain revision by if the query method returns `QueryResponseMessage<T>` and carries
+As alternative, you can query for a certain revision, if the query method returns `QueryResponseMessage<T>` and carries
 metadata inside the message `metadata` field.
 
 ```kotlin
@@ -90,14 +77,16 @@ by implementing the `Revisionable` interface or by returning `QueryResponseMessa
 
 If you have any questions how to use the extension, please have a look on example project.
 
-### Dispatch-aware command bus
+### Dispatch-aware Axon Server command bus
 
-By default, the Axon Server Connector will register all command handlers it finds by AutoConfiguration both on "Local" and "Remote" segments of the command bus. In order to have
-more flexibility on that, for example by hiding some CommandHandlers from registration, you might want to have a possibility to exclude CommandHandler registration on a
-remote command bus. By doing so, the locally dispatched commands should still get delivered to command handlers by using the local segment of the command bus.
+By default, the Axon Server Connector will register all command handlers it finds by `AutoConfiguration` both on "Local" and "Remote" 
+segments of the command bus. In order to have more flexibility on that, for example by hiding some `CommandHandlers` from registration, 
+you might want to have a possibility to exclude `CommandHandler` registration on a remote command bus. By doing so, the locally dispatched 
+commands should still get delivered to command handlers by using the local segment of the command bus.
 
-The Dispatch-aware command bus is designed exactly for the purpose above. In order to use it, you will need the Axon Server Connector to be configured
-to use Axon Server (`axon.axonserver.enabled` must not be set to `false`). In addition, you need to enable the following property:
+The Dispatch-aware command bus is designed exactly for the purpose above. In order to use it, you will need the Axon Server Connector 
+to be configured to use Axon Server (`axon.axonserver.enabled` must not be set to `false`). In addition, you need to enable the following 
+property:
 
 ```yaml
 axon-gateway:
@@ -108,7 +97,7 @@ axon-gateway:
 
 Now you need to specify a `CommandDispatchStrategy`. You can do this manually, by providing a bean factory for this, a component 
 implementing this interface or by using the predefined components using properties to configure predicates for command names excluded from 
-remote-only registration. For doing so, specify the following properties in your `application.yml` 
+remote registration. For doing so, specify the following properties in your `application.yml` 
 
 ```yaml
 axon-gateway:
@@ -138,10 +127,9 @@ To do so, please add the following dependency to your classpath:
 <dependency>
   <groupId>io.holixon.axon.gateway</groupId>
   <artifactId>axon-gateway-jackson-module</artifactId>
-  <version>0.1.0</version>
+  <version>${axon-gateway-extension.version}</version>
 </dependency>
 ```
-
 and register it in your Jackson ObjectMapper:
 
 ```kotlin

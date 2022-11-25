@@ -25,7 +25,7 @@ open class DispatchAwareAxonServerCommandBus(
     return if (commandDispatchStrategy.registerRemote(commandName = commandName, messageHandler = messageHandler)) {
       super.subscribe(commandName, messageHandler)
     } else {
-      logger.info("DISPATCH-AWARE-COMMAND_GATEWAY-001: Subscribing command with name [{}] to local command bus only.", commandName)
+      logger.info("DISPATCH-AWARE-COMMAND_GATEWAY-002: Subscribing command with name [{}] to local command bus only.", commandName)
       return AxonServerRegistration(localSegment().subscribe(commandName, messageHandler)) { }
     }
   }
@@ -34,7 +34,7 @@ open class DispatchAwareAxonServerCommandBus(
     return if (commandDispatchStrategy.dispatchRemote(commandMessage = commandMessage, commandCallback = commandCallback)) {
       super.dispatch(commandMessage, commandCallback)
     } else {
-      logger.debug("DISPATCH-AWARE-COMMAND_GATEWAY-002: Dispatching command [{}] with callback to local command bus only.", commandMessage.commandName)
+      logger.debug("DISPATCH-AWARE-COMMAND_GATEWAY-003: Dispatching command [{}] with callback to local command bus only.", commandMessage.commandName)
       localSegment().dispatch(commandMessage, commandCallback)
     }
   }

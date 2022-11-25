@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.holixon.axon.gateway</groupId>
     <artifactId>axon-gateway-extension-parent</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
   </parent>
 
   <artifactId>axon-gateway-example</artifactId>
@@ -19,7 +19,7 @@
     <maven.sources.skip>true</maven.sources.skip>
     <maven.install.skip>false</maven.install.skip>
     <gpg.skip>true</gpg.skip>
-    <springdoc-ui.version>1.6.12</springdoc-ui.version>
+    <springdoc-ui.version>1.6.13</springdoc-ui.version>
   </properties>
 
   <dependencies>

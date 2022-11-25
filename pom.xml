@@ -8,7 +8,7 @@
 
   <groupId>io.holixon.axon.gateway</groupId>
   <artifactId>axon-gateway-extension-parent</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
   <packaging>pom</packaging>
 
   <modules>
@@ -259,7 +259,7 @@
         <!-- Install -->
         <plugin>
           <artifactId>maven-install-plugin</artifactId>
-          <version>3.0.1</version>
+          <version>3.1.0</version>
         </plugin>
 
         <!-- Assembly -->
@@ -292,7 +292,7 @@
           </configuration>
         </plugin>
 
-        <!-- Coverage -->
+        <!-- Coverage metering -->
         <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
@@ -303,12 +303,21 @@
               <goals>
                 <goal>prepare-agent</goal>
               </goals>
+              <configuration>
+                <destFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</destFile>
+                <propertyName>surefireArgLine</propertyName>
+              </configuration>
             </execution>
             <execution>
-              <id>pre-integration-test</id>
+              <id>post-unit-test</id>
+              <phase>test</phase>
               <goals>
-                <goal>prepare-agent-integration</goal>
+                <goal>report</goal>
               </goals>
+              <configuration>
+                <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
+                <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
+              </configuration>
             </execution>
           </executions>
         </plugin>
@@ -321,16 +330,7 @@
             <useSystemClassLoader>false</useSystemClassLoader>
             <shutdown>kill</shutdown>
             <runOrder>random</runOrder>
-            <includes>
-              <include>**/*Test.java</include>
-              <include>**/*Tests.java</include>
-              <include>**/*Test_*.java</include>
-              <include>**/*Tests_*.java</include>
-            </includes>
-            <!-- Sets the VM argument line used when unit tests are run. -->
-            <!-- prevent the annoying ForkedBooter process from stealing window focus on Mac OS -->
-            <argLine>-Djava.awt.headless=true ${argLine} -XX:+StartAttachListener -Xmx1024m -XX:MaxPermSize=256m</argLine>
-            <argLine>${surefireArgLine}</argLine>
+            <argLine>--illegal-access=permit ${surefireArgLine} -Djava.awt.headless=true -XX:+StartAttachListener</argLine>
             <systemPropertyVariables>
               <slf4j.version>${slf4j.version}</slf4j.version>
               <log4j.version>${log4j.version}</log4j.version>
@@ -338,11 +338,22 @@
           </configuration>
         </plugin>
 
-        <!-- Failsafe -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
           <version>2.22.2</version>
+          <executions>
+            <execution>
+              <phase>integration-test</phase>
+              <goals>
+                <goal>integration-test</goal>
+                <goal>verify</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <argLine>--illegal-access=permit ${failsafeArgLine}</argLine>
+          </configuration>
         </plugin>
 
         <!-- KDoc generation -->

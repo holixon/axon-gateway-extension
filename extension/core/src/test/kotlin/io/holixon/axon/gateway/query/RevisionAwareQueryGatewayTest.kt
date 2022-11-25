@@ -15,7 +15,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-@Disabled("For some reasons this test stopped working, see #163")
+@Disabled
 internal class RevisionAwareQueryGatewayTest {
   private val queryBus = mockk<QueryBus>()
 
