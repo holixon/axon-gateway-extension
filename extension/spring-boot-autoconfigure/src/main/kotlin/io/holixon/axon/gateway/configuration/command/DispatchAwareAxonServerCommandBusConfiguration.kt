@@ -44,6 +44,9 @@ class DispatchAwareAxonServerCommandBusConfiguration(
     private val logger = LoggerFactory.getLogger(DispatchAwareAxonServerCommandBusConfiguration::class.java)
   }
 
+  /**
+   * Configures alternative command bus, able to register command handlers based on special criteria.
+   */
   @Bean
   @Primary
   @ConditionalOnMissingQualifiedBean(qualifier = "!localSegment", beanClass = CommandBus::class)
