@@ -4,6 +4,7 @@ import io.holixon.axon.gateway.query.RevisionAwareQueryGateway
 import org.axonframework.queryhandling.QueryBus
 import org.axonframework.queryhandling.QueryGateway
 import org.slf4j.LoggerFactory
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
@@ -26,6 +27,7 @@ class RevisionAwareQueryGatewayConfiguration {
    * Factory function creating a revision-aware query gateway.
    */
   @Bean
+  @ConditionalOnBean(value = [QueryBus::class])
   fun revisionAwareGateway(queryBus: QueryBus, properties: RevisionAwareQueryGatewayProperties): QueryGateway {
     logger.info("REVISION-QUERY-GATEWAY-001: Using revision-aware query gateway.")
     return RevisionAwareQueryGateway(queryBus, properties.defaultQueryTimeout)
