@@ -31,4 +31,5 @@ internal class JacksonApplicationITest {
 
     assertNotNull(scenario.queryForRequest(requestId, revision = 2L))
   }
+
 }

@@ -12,7 +12,7 @@ import kotlin.reflect.KClass
 
 /**
  * Module serializing the KClass correctly.
- * insired by https://github.com/FasterXML/jackson-module-kotlin/issues/361
+ * inspired by https://github.com/FasterXML/jackson-module-kotlin/issues/361
  */
 class AxonGatewayJacksonModule : SimpleModule() {
   init {

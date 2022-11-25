@@ -25,7 +25,7 @@ internal class XstreamApplicationITest {
     assertNotNull(scenario.queryForRequest(requestId, revision = 1L))
 
     Thread {
-      Thread.sleep(500)
+      Thread.sleep(2_000)
       scenario.updateRequest(requestId, revision = 2L)
     }.start()
 
