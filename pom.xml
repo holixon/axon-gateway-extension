@@ -38,7 +38,6 @@
 
     <!-- Skip KDoc generation by default -->
     <dokka.skip>true</dokka.skip>
-    <!-- Skip JaCoCo by default -->
   </properties>
 
   <dependencyManagement>
@@ -335,24 +334,6 @@
               <slf4j.version>${slf4j.version}</slf4j.version>
               <log4j.version>${log4j.version}</log4j.version>
             </systemPropertyVariables>
-          </configuration>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-failsafe-plugin</artifactId>
-          <version>2.22.2</version>
-          <executions>
-            <execution>
-              <phase>integration-test</phase>
-              <goals>
-                <goal>integration-test</goal>
-                <goal>verify</goal>
-              </goals>
-            </execution>
-          </executions>
-          <configuration>
-            <argLine>--illegal-access=permit ${failsafeArgLine}</argLine>
           </configuration>
         </plugin>
 
