@@ -4,18 +4,20 @@ import io.holixon.axon.gateway.query.QueryResponseMessageResponseType.Companion.
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import org.awaitility.Awaitility
+import org.awaitility.Awaitility.await
 import org.axonframework.common.Registration
 import org.axonframework.messaging.GenericMessage
 import org.axonframework.queryhandling.*
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import reactor.core.publisher.Mono
 import reactor.test.publisher.TestPublisher
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeUnit.MILLISECONDS
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-@Disabled
 internal class RevisionAwareQueryGatewayTest {
   private val queryBus = mockk<QueryBus>()
 
@@ -42,13 +44,19 @@ internal class RevisionAwareQueryGatewayTest {
     val result = queryGateway.query(GenericMessage.asMessage(TestQuery).withMetaData(RevisionQueryParameters(4).toMetaData()), queryResponseMessageResponseType<String>())
 
     subscriptionQueryUpdatePublisher.next(updateMessage("foo2", 2))
-    assertFalse(result.isDone, "Result future should not be done yet.")
+    await().atMost(5000, MILLISECONDS).untilAsserted {
+      assertFalse(result.isDone, "Result future should not be done yet.")
+    }
     subscriptionQueryUpdatePublisher.next(updateMessage("foo3", 3))
-    assertFalse(result.isDone, "Result future should not be done yet.")
+    await().atMost(5000, MILLISECONDS).untilAsserted {
+      assertFalse(result.isDone, "Result future should not be done yet.")
+    }
     subscriptionQueryUpdatePublisher.next(updateMessage("foo4", 4))
-    assertTrue(result.isDone, "Result future should be done now.")
-    // correct message is delivered
-    assertEquals("foo4", result.join())
+    await().atMost(5000, MILLISECONDS).untilAsserted {
+      assertTrue(result.isDone, "Result future should be done now.")
+      // correct message is delivered
+      assertEquals("foo4", result.join())
+    }
     // subscription is cancelled
     subscriptionQueryUpdatePublisher.assertCancelled()
     verify { registration.cancel() }
