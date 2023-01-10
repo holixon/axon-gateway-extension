@@ -19,7 +19,7 @@
   </modules>
 
   <properties>
-    <axon.version>4.6.2</axon.version>
+    <axon.version>4.6.3</axon.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <kotlin.version>1.8.0</kotlin.version>
     <kotlin-logging.version>3.0.4</kotlin-logging.version>
