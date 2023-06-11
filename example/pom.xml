@@ -18,7 +18,7 @@
     <maven.sources.skip>true</maven.sources.skip>
     <maven.install.skip>false</maven.install.skip>
     <gpg.skip>true</gpg.skip>
-    <springdoc-ui.version>1.6.14</springdoc-ui.version>
+    <springdoc-ui.version>1.7.0</springdoc-ui.version>
   </properties>
 
   <dependencies>
