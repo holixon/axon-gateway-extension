@@ -19,12 +19,12 @@
   </modules>
 
   <properties>
-    <axon.version>4.6.3</axon.version>
+    <axon.version>4.8.2</axon.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <kotlin.version>1.9.10</kotlin.version>
     <kotlin-logging.version>3.0.5</kotlin-logging.version>
 
-    <java.version>11</java.version>
+    <java.version>17</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
 
@@ -34,7 +34,7 @@
     <log4j.version>2.13.3</log4j.version>
     <dokka.version>1.9.0</dokka.version>
 
-    <springboot.version>2.7.5</springboot.version>
+    <springboot.version>3.1.3</springboot.version>
 
     <!-- Skip KDoc generation by default -->
     <dokka.skip>true</dokka.skip>
@@ -192,7 +192,7 @@
           <artifactId>kotlin-maven-plugin</artifactId>
           <version>${kotlin.version}</version>
           <configuration>
-            <jvmTarget>1.8</jvmTarget>
+            <jvmTarget>17</jvmTarget>
             <args>
               <arg>-Xjsr305=strict</arg>
             </args>
@@ -329,7 +329,7 @@
             <useSystemClassLoader>false</useSystemClassLoader>
             <shutdown>kill</shutdown>
             <runOrder>random</runOrder>
-            <argLine>--illegal-access=permit ${surefireArgLine} -Djava.awt.headless=true -XX:+StartAttachListener</argLine>
+            <argLine>${surefireArgLine} -Djava.awt.headless=true -XX:+StartAttachListener</argLine>
             <systemPropertyVariables>
               <slf4j.version>${slf4j.version}</slf4j.version>
               <log4j.version>${log4j.version}</log4j.version>
@@ -409,7 +409,7 @@
                     <version>${java.version}</version>
                   </requireJavaVersion>
                   <requireMavenVersion>
-                    <version>3.5</version>
+                    <version>3.9</version>
                   </requireMavenVersion>
                 </rules>
               </configuration>

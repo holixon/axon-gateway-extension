@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.thoughtworks.xstream.XStream
 import com.thoughtworks.xstream.security.AnyTypePermission
-import io.holixon.axon.gateway.configuration.query.EnableRevisionAwareQueryGateway
 import io.holixon.axon.gateway.jackson.module.AxonGatewayJacksonModule
 import io.holixon.axon.gateway.query.RevisionValue
 import org.axonframework.commandhandling.CommandMessage
