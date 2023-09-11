@@ -1,0 +1,3 @@
+io.holixon.axon.gateway.configuration.command.CommandDispatchStrategyConfiguration
+io.holixon.axon.gateway.configuration.command.DispatchAwareAxonServerCommandBusConfiguration
+io.holixon.axon.gateway.configuration.query.RevisionAwareQueryGatewayConfiguration
