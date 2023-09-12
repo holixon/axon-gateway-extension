@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import java.util.*
 import java.util.concurrent.atomic.AtomicLong
-import javax.validation.Valid
-import javax.validation.constraints.NotEmpty
+import jakarta.validation.Valid
+import jakarta.validation.constraints.NotEmpty
 
 /**
  * Command controller.

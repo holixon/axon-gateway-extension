@@ -2,7 +2,6 @@ package io.holixon.axon.gateway.configuration.command
 
 import io.holixon.axon.gateway.command.CommandDispatchStrategy
 import io.holixon.axon.gateway.command.DispatchAwareAxonServerCommandBus
-import io.holixon.axon.gateway.configuration.query.RevisionAwareQueryGatewayConfiguration
 import org.axonframework.axonserver.connector.AxonServerConfiguration
 import org.axonframework.axonserver.connector.AxonServerConnectionManager
 import org.axonframework.axonserver.connector.TargetContextResolver
@@ -22,7 +21,6 @@ import org.springframework.boot.autoconfigure.AutoConfigureAfter
 import org.springframework.boot.autoconfigure.AutoConfigureBefore
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Import
 import org.springframework.context.annotation.Primary
 
 /**

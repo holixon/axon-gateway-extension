@@ -1,7 +1,6 @@
 package io.holixon.axon.gateway.configuration.query
 
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
 
 /**
  * Properties of the revision-aware query gateway.
@@ -16,7 +15,6 @@ import org.springframework.boot.context.properties.ConstructorBinding
  * </code>
  */
 @ConfigurationProperties("axon-gateway.query.revision-aware")
-@ConstructorBinding
 data class RevisionAwareQueryGatewayProperties(
-    val defaultQueryTimeout: Long = 3
+  val defaultQueryTimeout: Long = 3
 )
