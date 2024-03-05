@@ -32,7 +32,7 @@
     <junit.jupiter.version>5.7.0</junit.jupiter.version>
     <slf4j.version>1.7.30</slf4j.version>
     <log4j.version>2.13.3</log4j.version>
-    <dokka.version>1.9.10</dokka.version>
+    <dokka.version>1.9.20</dokka.version>
 
     <springboot.version>3.1.5</springboot.version>
 
