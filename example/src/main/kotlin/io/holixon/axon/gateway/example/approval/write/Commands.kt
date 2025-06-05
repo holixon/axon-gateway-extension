@@ -1,4 +1,4 @@
-package io.holixon.axon.gateway.example
+package io.holixon.axon.gateway.example.approval.write
 
 import org.axonframework.modelling.command.TargetAggregateIdentifier
 

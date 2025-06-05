@@ -9,12 +9,12 @@ import org.axonframework.axonserver.connector.command.AxonServerCommandBus
 import org.axonframework.axonserver.connector.command.CommandLoadFactorProvider
 import org.axonframework.axonserver.connector.command.CommandPriorityCalculator
 import org.axonframework.commandhandling.CommandBus
+import org.axonframework.commandhandling.CommandBusSpanFactory
 import org.axonframework.commandhandling.CommandMessage
 import org.axonframework.commandhandling.distributed.RoutingStrategy
 import org.axonframework.serialization.Serializer
 import org.axonframework.springboot.autoconfig.AxonServerBusAutoConfiguration
 import org.axonframework.springboot.util.ConditionalOnMissingQualifiedBean
-import org.axonframework.tracing.SpanFactory
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.AutoConfigureAfter
@@ -57,7 +57,7 @@ class DispatchAwareAxonServerCommandBusConfiguration(
     priorityCalculator: CommandPriorityCalculator?,
     loadFactorProvider: CommandLoadFactorProvider?,
     targetContextResolver: TargetContextResolver<in CommandMessage<*>?>?,
-    spanFactory: SpanFactory
+    spanFactory: CommandBusSpanFactory
   ): AxonServerCommandBus {
 
     logger.info("DISPATCH-AWARE-COMMAND_GATEWAY-001: Dispatch-aware command bus is activated. You can configure command handler registration conditionally.")

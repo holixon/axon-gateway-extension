@@ -2,6 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.toolisticon.maven.parent</groupId>
+    <artifactId>maven-parent-kotlin-base</artifactId>
+    <version>2025.5.0</version>
+    <relativePath />
+  </parent>
+
   <name>Axon Framework - Gateway Extension - Parent</name>
   <description>Extension for Axon Framework that provides additional gateways.</description>
   <url>https://github.com/holixon/axon-gateway-extension/</url>
@@ -20,24 +28,7 @@
 
   <properties>
     <axon.version>4.11.3</axon.version>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <kotlin.version>2.1.21</kotlin.version>
-    <kotlin-logging.version>3.0.5</kotlin-logging.version>
-
-    <java.version>17</java.version>
-    <maven.compiler.source>${java.version}</maven.compiler.source>
-    <maven.compiler.target>${java.version}</maven.compiler.target>
-
-    <mockk.version>1.14.2</mockk.version>
-    <junit.jupiter.version>5.7.0</junit.jupiter.version>
-    <slf4j.version>1.7.30</slf4j.version>
-    <log4j.version>2.13.3</log4j.version>
-    <dokka.version>2.0.0</dokka.version>
-
     <springboot.version>3.5.0</springboot.version>
-
-    <!-- Skip KDoc generation by default -->
-    <dokka.skip>true</dokka.skip>
   </properties>
 
   <dependencyManagement>
@@ -68,15 +59,6 @@
         <version>${project.version}</version>
       </dependency>
 
-      <!-- first: Kotlin Import -->
-      <dependency>
-        <groupId>org.jetbrains.kotlin</groupId>
-        <artifactId>kotlin-bom</artifactId>
-        <version>${kotlin.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-
       <!-- second: SpringBoot Import -->
       <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -97,7 +79,7 @@
       <dependency>
         <groupId>io.mockk</groupId>
         <artifactId>mockk-jvm</artifactId>
-        <version>${mockk.version}</version>
+        <version>1.14.2</version>
         <scope>test</scope>
       </dependency>
     </dependencies>
@@ -106,96 +88,17 @@
   <dependencies>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-stdlib-jdk8</artifactId>
-    </dependency>
-
-    <!-- Test dependencies -->
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-params</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-test-junit5</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.mockk</groupId>
-      <artifactId>mockk-jvm</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.projectreactor</groupId>
-      <artifactId>reactor-test</artifactId>
-      <scope>test</scope>
+      <artifactId>kotlin-stdlib</artifactId>
     </dependency>
   </dependencies>
 
   <build>
-    <defaultGoal>clean jacoco:prepare-agent install</defaultGoal>
-    <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
-    <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
-    <pluginManagement>
       <plugins>
-        <!-- Clean -->
-        <plugin>
-          <artifactId>maven-clean-plugin</artifactId>
-          <version>3.5.0</version>
-        </plugin>
-
-        <!-- Java Compiler -->
-        <plugin>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.14.0</version>
-          <configuration>
-            <encoding>${project.build.sourceEncoding}</encoding>
-            <source>${maven.compiler.source}</source>
-            <target>${maven.compiler.target}</target>
-          </configuration>
-          <executions>
-            <!-- Replacing default-compile as it is treated specially by maven -->
-            <execution>
-              <id>default-compile</id>
-              <phase>none</phase>
-            </execution>
-            <!-- Replacing default-testCompile as it is treated specially by maven -->
-            <execution>
-              <id>default-testCompile</id>
-              <phase>none</phase>
-            </execution>
-            <execution>
-              <id>java-compile</id>
-              <phase>compile</phase>
-              <goals>
-                <goal>compile</goal>
-              </goals>
-            </execution>
-            <execution>
-              <id>java-test-compile</id>
-              <phase>test-compile</phase>
-              <goals>
-                <goal>testCompile</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-
         <!-- Kotlin Compile -->
         <plugin>
           <groupId>org.jetbrains.kotlin</groupId>
           <artifactId>kotlin-maven-plugin</artifactId>
-          <version>${kotlin.version}</version>
           <configuration>
-            <jvmTarget>17</jvmTarget>
-            <args>
-              <arg>-Xjsr305=strict</arg>
-            </args>
             <compilerPlugins>
               <plugin>no-arg</plugin>
               <plugin>spring</plugin>
@@ -206,348 +109,11 @@
               <option>all-open:annotation=org.axonframework.modelling.command.AggregateRoot</option>
             </pluginOptions>
           </configuration>
-          <executions>
-            <execution>
-              <id>compile</id>
-              <phase>compile</phase>
-              <goals>
-                <goal>compile</goal>
-              </goals>
-              <configuration>
-                <sourceDirs>
-                  <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
-                </sourceDirs>
-              </configuration>
-            </execution>
-            <execution>
-              <id>test-compile</id>
-              <phase>test-compile</phase>
-              <goals>
-                <goal>test-compile</goal>
-              </goals>
-              <configuration>
-                <sourceDirs>
-                  <sourceDir>${project.basedir}/src/test/kotlin</sourceDir>
-                </sourceDirs>
-              </configuration>
-            </execution>
-          </executions>
-          <dependencies>
-            <dependency>
-              <groupId>org.jetbrains.kotlin</groupId>
-              <artifactId>kotlin-maven-allopen</artifactId>
-              <version>${kotlin.version}</version>
-            </dependency>
-            <dependency>
-              <groupId>org.jetbrains.kotlin</groupId>
-              <artifactId>kotlin-maven-noarg</artifactId>
-              <version>${kotlin.version}</version>
-            </dependency>
-          </dependencies>
-        </plugin>
-
-        <!-- Resources -->
-        <plugin>
-          <artifactId>maven-resources-plugin</artifactId>
-          <version>3.3.1</version>
-          <configuration>
-            <encoding>UTF-8</encoding>
-          </configuration>
-        </plugin>
-
-        <!-- Install -->
-        <plugin>
-          <artifactId>maven-install-plugin</artifactId>
-          <version>3.1.4</version>
-        </plugin>
-
-        <!-- Assembly -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-assembly-plugin</artifactId>
-          <version>3.7.1</version>
-          <configuration>
-            <descriptorSourceDirectory>assembly</descriptorSourceDirectory>
-            <archiverConfig>
-              <duplicateBehavior>skip</duplicateBehavior>
-            </archiverConfig>
-          </configuration>
-        </plugin>
-
-        <plugin>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-maven-plugin</artifactId>
-          <version>${springboot.version}</version>
-        </plugin>
-
-        <!-- Release -->
-        <plugin>
-          <artifactId>maven-release-plugin</artifactId>
-          <version>3.1.1</version>
-          <configuration>
-            <mavenExecutorId>forked-path</mavenExecutorId>
-            <localCheckout>true</localCheckout>
-            <pushChanges>false</pushChanges>
-          </configuration>
-        </plugin>
-
-        <!-- Coverage metering -->
-        <plugin>
-          <groupId>org.jacoco</groupId>
-          <artifactId>jacoco-maven-plugin</artifactId>
-          <version>0.8.13</version>
-          <executions>
-            <execution>
-              <id>pre-unit-test</id>
-              <goals>
-                <goal>prepare-agent</goal>
-              </goals>
-              <configuration>
-                <destFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</destFile>
-                <propertyName>surefireArgLine</propertyName>
-              </configuration>
-            </execution>
-            <execution>
-              <id>post-unit-test</id>
-              <phase>test</phase>
-              <goals>
-                <goal>report</goal>
-              </goals>
-              <configuration>
-                <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
-                <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
-
-        <!-- Surefire -->
-        <plugin>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.5.3</version>
-          <configuration>
-            <useSystemClassLoader>false</useSystemClassLoader>
-            <shutdown>kill</shutdown>
-            <runOrder>random</runOrder>
-            <argLine>${surefireArgLine} -Djava.awt.headless=true -XX:+StartAttachListener</argLine>
-            <systemPropertyVariables>
-              <slf4j.version>${slf4j.version}</slf4j.version>
-              <log4j.version>${log4j.version}</log4j.version>
-            </systemPropertyVariables>
-          </configuration>
-        </plugin>
-
-        <!-- KDoc generation -->
-        <plugin>
-          <groupId>org.jetbrains.dokka</groupId>
-          <artifactId>dokka-maven-plugin</artifactId>
-          <version>${dokka.version}</version>
-          <configuration>
-            <!-- Conditional on maven property set per-project -->
-            <skip>${dokka.skip}</skip>
-            <sourceLinks>
-              <link>
-                <path>${project.basedir}</path>
-                <url>https://github.com/holixon/axon-gateway-extension/blob/master</url>
-                <lineSuffix>#L</lineSuffix>
-              </link>
-            </sourceLinks>
-            <jdkVersion>${java.version}</jdkVersion>
-          </configuration>
-          <executions>
-            <execution>
-              <phase>prepare-package</phase>
-              <goals>
-                <goal>dokka</goal>
-                <goal>javadocJar</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-
-        <!-- JAR -->
-        <plugin>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>3.4.2</version>
-          <configuration>
-            <archive>
-              <manifest>
-                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-              </manifest>
-            </archive>
-          </configuration>
-        </plugin>
-        <plugin>
-          <artifactId>maven-source-plugin</artifactId>
-          <version>3.3.1</version>
-          <executions>
-            <execution>
-              <id>attach-sources</id>
-              <phase>package</phase>
-              <goals>
-                <goal>jar-no-fork</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-
-        <!-- Enforcer -->
-        <plugin>
-          <!-- just to make sure deployed artifacts are always built (and tested) using JDK 8+ -->
-          <artifactId>maven-enforcer-plugin</artifactId>
-          <version>3.5.0</version>
-          <executions>
-            <execution>
-              <id>enforce-java</id>
-              <phase>deploy</phase>
-              <goals>
-                <goal>enforce</goal>
-              </goals>
-              <configuration>
-                <rules>
-                  <requireJavaVersion>
-                    <version>${java.version}</version>
-                  </requireJavaVersion>
-                  <requireMavenVersion>
-                    <version>3.9</version>
-                  </requireMavenVersion>
-                </rules>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
-
-        <!-- GitFlow -->
-        <plugin>
-          <groupId>com.amashchenko.maven.plugin</groupId>
-          <artifactId>gitflow-maven-plugin</artifactId>
-          <version>1.21.0</version>
-          <configuration>
-            <gitFlowConfig>
-              <productionBranch>master</productionBranch>
-              <developmentBranch>develop</developmentBranch>
-              <featureBranchPrefix>feature/</featureBranchPrefix>
-              <releaseBranchPrefix>release/</releaseBranchPrefix>
-              <hotfixBranchPrefix>hotfix/</hotfixBranchPrefix>
-              <supportBranchPrefix>support/</supportBranchPrefix>
-              <origin>origin</origin>
-            </gitFlowConfig>
-            <useSnapshotInHotfix>true</useSnapshotInHotfix>
-            <useSnapshotInRelease>true</useSnapshotInRelease>
-            <keepBranch>false</keepBranch>
-            <pushRemote>true</pushRemote>
-          </configuration>
-        </plugin>
-
-        <!-- To sign the artifacts -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-gpg-plugin</artifactId>
-          <version>3.2.7</version>
-          <configuration>
-            <gpgArguments>
-              <arg>--batch</arg>
-              <arg>--yes</arg>
-              <arg>--pinentry-mode</arg>
-              <arg>loopback</arg>
-            </gpgArguments>
-          </configuration>
-          <executions>
-            <execution>
-              <id>sign-artifacts</id>
-              <phase>verify</phase>
-              <goals>
-                <goal>sign</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-
-        <!-- Deploy -->
-        <plugin>
-          <artifactId>maven-deploy-plugin</artifactId>
-          <version>3.1.4</version>
-          <configuration>
-            <skip>true</skip>
-          </configuration>
-        </plugin>
-
-        <plugin>
-          <groupId>org.sonatype.plugins</groupId>
-          <artifactId>nexus-staging-maven-plugin</artifactId>
-          <version>1.7.0</version>
-          <executions>
-            <execution>
-              <id>default-deploy</id>
-              <phase>deploy</phase>
-              <goals>
-                <goal>deploy</goal>
-              </goals>
-              <configuration>
-                <serverId>ossrh</serverId>
-                <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                <autoReleaseAfterClose>true</autoReleaseAfterClose>
-              </configuration>
-            </execution>
-          </executions>
         </plugin>
       </plugins>
-    </pluginManagement>
-
-    <!--
-    Default build
-    -->
-    <plugins>
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.jetbrains.kotlin</groupId>
-        <artifactId>kotlin-maven-plugin</artifactId>
-      </plugin>
-    </plugins>
-
   </build>
 
   <profiles>
-
-    <!--
-    Profile creating all artifacts: JARs, POMs, Sources, JavaDoc and all signatures.
-    -->
-    <profile>
-      <id>release</id>
-      <activation>
-        <property>
-          <name>release</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
-          </plugin>
-          <plugin>
-            <groupId>org.jetbrains.dokka</groupId>
-            <artifactId>dokka-maven-plugin</artifactId>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
-          </plugin>
-          <plugin>
-            <groupId>org.sonatype.plugins</groupId>
-            <artifactId>nexus-staging-maven-plugin</artifactId>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
     <profile>
       <!--
       Example module, should be skipped during release
@@ -564,30 +130,12 @@
     </profile>
   </profiles>
 
-  <pluginRepositories>
-    <pluginRepository>
-      <id>jcenter</id>
-      <name>JCenter</name>
-      <url>https://jcenter.bintray.com/</url>
-    </pluginRepository>
-  </pluginRepositories>
-
   <!-- deploy and release configuration -->
   <distributionManagement>
     <site>
       <id>README</id>
       <url>https://github.com/holixon/axon-gateway-extension</url>
     </site>
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-      <uniqueVersion>true</uniqueVersion>
-    </snapshotRepository>
-    <repository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-      <uniqueVersion>false</uniqueVersion>
-    </repository>
   </distributionManagement>
 
   <scm>
@@ -597,35 +145,23 @@
     <url>https://github.com/holixon/axon-gateway-extension</url>
     <tag>HEAD</tag>
   </scm>
+
   <issueManagement>
     <system>GitHub</system>
     <url>https://github.com/holixon/axon-gateway-extension/issues</url>
   </issueManagement>
-
-
-  <developers>
-    <developer>
-      <name>Simon Zambrovski</name>
-      <email>simon.zambrovski@holisticon.de</email>
-      <organization>Holisticon AG</organization>
-      <organizationUrl>https://holisticon.de</organizationUrl>
-      <roles>
-        <role>Product Owner</role>
-        <role>Developer</role>
-      </roles>
-    </developer>
-  </developers>
 
   <!-- License Stuff -->
   <inceptionYear>2020</inceptionYear>
   <licenses>
     <license>
       <name>Apache 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+      <url>https://www.apache.org/licenses/LICENSE-2.0</url>
     </license>
   </licenses>
   <organization>
     <name>Holisticon AG</name>
     <url>https://holixon.io</url>
   </organization>
+
 </project>

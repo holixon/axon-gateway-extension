@@ -1,5 +1,7 @@
-package io.holixon.axon.gateway.example
+package io.holixon.axon.gateway.example.approval.write
 
+import io.holixon.axon.gateway.example.approval.event.ApprovalRequestCreatedEvent
+import io.holixon.axon.gateway.example.approval.event.ApprovalRequestUpdatedEvent
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingHandler
 import org.axonframework.modelling.command.AggregateIdentifier
@@ -22,12 +24,14 @@ class ApprovalRequestAggregate() {
    */
   @CommandHandler
   constructor(cmd: CreateApprovalRequestCommand) : this() {
-    AggregateLifecycle.apply(ApprovalRequestCreatedEvent(
+    AggregateLifecycle.apply(
+      ApprovalRequestCreatedEvent(
         requestId = cmd.requestId,
         subject = cmd.subject,
         amount = cmd.amount,
         currency = cmd.currency
-    ))
+    )
+    )
   }
 
   /**
@@ -37,12 +41,14 @@ class ApprovalRequestAggregate() {
    */
   @CommandHandler
   fun handle(cmd: UpdateApprovalRequestCommand) {
-    AggregateLifecycle.apply(ApprovalRequestUpdatedEvent(
+    AggregateLifecycle.apply(
+      ApprovalRequestUpdatedEvent(
         requestId = cmd.requestId,
         subject = cmd.subject,
         amount = cmd.amount,
         currency = cmd.currency
-    ))
+    )
+    )
   }
 
   /**

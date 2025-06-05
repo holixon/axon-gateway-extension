@@ -1,5 +1,6 @@
-package io.holixon.axon.gateway.example
+package io.holixon.axon.gateway.example.approval
 
+import io.holixon.axon.gateway.example.approval.usecase.TestScenario
 import org.awaitility.kotlin.await
 import org.awaitility.kotlin.untilAsserted
 import org.junit.jupiter.api.Test
@@ -11,9 +12,9 @@ import java.util.*
 import kotlin.test.assertNotNull
 
 @SpringBootTest
+@ActiveProfiles("jackson", "inmem")
 @DirtiesContext
-@ActiveProfiles("inmem")
-internal class XstreamApplicationITest {
+internal class JacksonApplicationITest {
 
   @Autowired
   private lateinit var scenario: TestScenario
@@ -21,17 +22,16 @@ internal class XstreamApplicationITest {
   val requestId = UUID.randomUUID().toString()
 
   @Test
-  fun `should create and query for request using XStream`() {
+  fun `should create and query for request using jackson`() {
     scenario.createRequest(requestId, revision = 1L)
     await untilAsserted {
       assertNotNull(scenario.queryForRequest(requestId, revision = 1L))
     }
 
     scenario.updateRequest(requestId, revision = 2L)
-
     await untilAsserted {
       assertNotNull(scenario.queryForRequest(requestId, revision = 2L))
     }
-
   }
+
 }

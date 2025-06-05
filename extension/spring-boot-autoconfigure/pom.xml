@@ -12,10 +12,6 @@
   <artifactId>axon-gateway-spring-boot-autoconfigure</artifactId>
   <packaging>jar</packaging>
 
-  <properties>
-    <dokka.skip>false</dokka.skip>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
@@ -42,11 +38,6 @@
       <groupId>org.axonframework</groupId>
       <artifactId>axon-spring-boot-autoconfigure</artifactId>
       <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
     </dependency>
 
     <dependency>
@@ -81,6 +72,17 @@
       <artifactId>slf4j-simple</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>io.mockk</groupId>
+      <artifactId>mockk-jvm</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.projectreactor</groupId>
+      <artifactId>reactor-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>

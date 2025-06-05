@@ -1,5 +1,7 @@
-package io.holixon.axon.gateway.example
+package io.holixon.axon.gateway.example.approval.read
 
+import io.holixon.axon.gateway.example.approval.event.ApprovalRequestCreatedEvent
+import io.holixon.axon.gateway.example.approval.event.ApprovalRequestUpdatedEvent
 import io.holixon.axon.gateway.query.QueryResponseMessageResponseType
 import io.holixon.axon.gateway.query.RevisionValue
 import io.holixon.axon.gateway.query.Revisionable

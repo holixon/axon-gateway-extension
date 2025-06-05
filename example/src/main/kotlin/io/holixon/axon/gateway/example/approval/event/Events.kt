@@ -1,4 +1,4 @@
-package io.holixon.axon.gateway.example
+package io.holixon.axon.gateway.example.approval.event
 
 import org.axonframework.serialization.Revision
 

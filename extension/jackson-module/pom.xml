@@ -12,10 +12,6 @@
   <artifactId>axon-gateway-jackson-module</artifactId>
   <packaging>jar</packaging>
 
-  <properties>
-    <dokka.skip>false</dokka.skip>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
@@ -44,6 +40,17 @@
       <artifactId>axon-messaging</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>io.mockk</groupId>
+      <artifactId>mockk-jvm</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.projectreactor</groupId>
+      <artifactId>reactor-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
 </project>
