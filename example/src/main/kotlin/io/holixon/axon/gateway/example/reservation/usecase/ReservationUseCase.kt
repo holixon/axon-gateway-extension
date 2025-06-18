@@ -26,8 +26,10 @@ class ReservationUseCase(
 
     return Mono.create { sink ->
 
-      pendingConfirmations[reservationId] = sink
-
+      synchronized(pendingConfirmations) {
+        pendingConfirmations[reservationId] = sink
+      }
+      
       commandGateway.send<CreateReservationCommand>(
         CreateReservationCommand(
           reservationId = reservationId, requiresPrePayment = false
@@ -45,13 +47,17 @@ class ReservationUseCase(
     ).flatMap { event ->
       externalPaymentClient.call(event.reservationId)
     }.doFinally {
-      pendingConfirmations.remove(reservationId)
+      synchronized(pendingConfirmations) {
+        pendingConfirmations.remove(reservationId)
+      }
     }
   }
 
   @EventHandler
   fun on(event: ReservationConfirmedEvent) {
-    pendingConfirmations.remove(event.reservationId)?.success(event)
+    synchronized(pendingConfirmations) {
+      pendingConfirmations.remove(event.reservationId)?.success(event)
+    }
   }
 
 }
