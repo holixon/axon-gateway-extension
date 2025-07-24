@@ -27,7 +27,7 @@
   </modules>
 
   <properties>
-    <axon.version>4.11.3</axon.version>
+    <axon.version>4.11.4</axon.version>
     <springboot.version>3.5.0</springboot.version>
   </properties>
 
