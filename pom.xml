@@ -28,7 +28,7 @@
 
   <properties>
     <axon.version>4.12.1</axon.version>
-    <springboot.version>3.5.7</springboot.version>
+    <springboot.version>4.0.0</springboot.version>
   </properties>
 
   <dependencyManagement>
